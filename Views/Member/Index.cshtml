@@ -1,0 +1,53 @@
+﻿@model IEnumerable<bms.Models.Member>
+
+@{
+    ViewData["Title"] = "Members";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-light text-dark">Members</h2>
+        <a asp-action="Create" class="btn btn-outline-primary btn-sm">
+            Add Member
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-borderless table-hover align-middle">
+            <thead class="text-muted">
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model)
+                {
+                    <tr>
+                        <td>@member.FullName</td>
+                        <td>@member.Email</td>
+                        <td>@member.Address</td>
+                        <td>@member.PhoneNumber</td>
+                        <td>
+                            <span class="badge rounded-pill @(member.Status == "Active" ? "bg-success" : "bg-secondary")">
+                                @member.Status
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Update" asp-route-id="@member.MemberId" class="btn btn-sm btn-outline-secondary me-1">
+                                Update
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@member.MemberId" class="btn btn-sm btn-outline-danger">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
