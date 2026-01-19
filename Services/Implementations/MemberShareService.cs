@@ -36,7 +36,8 @@ namespace bms.Services.Implementations
             {
                 MemberId = memberId,
                 Amount = shareAmount,
-                ShareType = shareType
+                ShareType = shareType,
+                ContributionDate = DateTime.Now
             };
             
             await _memberShareRepository.AddAsync(memberShare);

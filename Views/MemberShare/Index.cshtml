@@ -1,1 +1,47 @@
-﻿
+﻿@model IEnumerable<bms.Models.Member>
+
+@{
+    ViewData["Title"] = "Member Share ";
+}
+<div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Member ID</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var member in Model){
+            <tr>
+                <td>@member.MemberId</td>
+                <td>@member.FullName</td>
+                <td>
+                    <span class="badge rounded-pill @(member.Status == "Active" ? "bg-success" : "bg-secondary")">
+                        @member.Status
+                    </span>
+                </td>
+                <td>
+                    @if (member.Status == "Active")
+                    {
+                        <a asp-action="AddShare" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-primary me-1">
+                            Add share 
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-secondary me-1" disabled>
+                            Add share
+                        </button>
+                    }
+                    <a asp-action="ViewMemberSharesDetails" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-info">
+                        View share Details
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>

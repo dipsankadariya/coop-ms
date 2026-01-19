@@ -1,0 +1,51 @@
+@model IEnumerable<bms.Models.MemberShare>
+
+@{
+    ViewData["Title"] = "Member Share Details";
+    var member = Model.FirstOrDefault()?.Member;
+}
+
+<div class="container py-5">
+    <h2 class="fw-light mb-4">Share Details for @(member?.FullName ?? "Member")</h2>
+    
+    @if (Model.Any())
+    {
+        <div class="mb-3">
+            <strong>Total Shares:</strong> @Model.Sum(s => s.Amount).ToString("C")
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Share ID</th>
+                    <th>Amount</th>
+                    <th>Share Type</th>
+                    <th>Contribution Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var share in Model.OrderByDescending(s => s.ContributionDate))
+                {
+                    <tr>
+                        <td>@share.ShareId</td>
+                        <td>@share.Amount.ToString("C")</td>
+                        <td>
+                            <span class="badge bg-primary">@share.ShareType</span>
+                        </td>
+                        <td>@share.ContributionDate.ToString("MMM dd, yyyy hh:mm tt")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            No share contributions found for this member.
+        </div>
+    }
+
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+    </div>
+</div>

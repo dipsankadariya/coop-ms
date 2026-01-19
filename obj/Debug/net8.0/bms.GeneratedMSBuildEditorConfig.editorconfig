@@ -36,8 +36,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyU2hhcmVcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/dipsa/source/repos/bms/bms/Views/MemberShare/ViewMemberSharesDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyU2hhcmVcVmlld01lbWJlclNoYXJlc0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/dipsa/source/repos/bms/bms/Views/Member/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dipsa/source/repos/bms/bms/Views/Member/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/dipsa/source/repos/bms/bms/Views/Member/Index.cshtml]

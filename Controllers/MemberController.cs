@@ -17,15 +17,23 @@ namespace bms.Controllers
         }
 
         //get: Members 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var memberes = await _memberService.GetAllMembersAsync();
-            return View(memberes);
+           try
+           {
+            var members = await _memberService.GetAllMembersAsync();
+            return View(members);
+           }
+           catch(Exception ex){
+            TempData["ErrorMessage"]= "An error occurred while fetching members: " + ex.Message;
+            return RedirectToAction("Index");
+           }
         }
 
 
         //getT: Members/Create
-
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -37,25 +45,40 @@ namespace bms.Controllers
         [ValidateAntiForgeryToken]
         public  async Task<IActionResult> Create(Member member)
         {
+           try{
             if (ModelState.IsValid)
             {
                 await _memberService.AddNewMemberAsync(member);
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Member added successfully.";
+                return RedirectToAction("Index");
             }
             return View(member);
+           }
+           catch(Exception ex){
+            TempData["ErrorMessage"]= "An error occurred while creating member: " + ex.Message;
+            return View(member);
+           }
         }
 
         //get : member/update
-
+       [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            var member = await _memberService.GetMemberByIdAsync(id);
-            if (member == null)
+            try
             {
-                return NotFound();
-            }
+                var member = await _memberService.GetMemberByIdAsync(id);
+                if (member == null)
+                {
+                    return NotFound();
+                }
 
-            return View(member);
+                return View(member);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while fetching member: " + ex.Message;
+                return RedirectToAction("Index");
+            }
         }
 
         //pst:memeber/update
@@ -64,25 +87,42 @@ namespace bms.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(Member member)
         {
-            if (ModelState.IsValid) { 
-             await _memberService.UpdateMemberAsync(member);
-               return RedirectToAction(nameof(Index));
-            }
+            try
+            {
+                if (ModelState.IsValid) { 
+                 await _memberService.UpdateMemberAsync(member);
+                 TempData["SuccessMessage"] = "Member updated successfully.";
+                   return RedirectToAction(nameof(Index));
+                }
 
-            return View(member);
+                return View(member);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while updating member: " + ex.Message;
+                return View(member);
+            }
         }
 
 
         //get:delete
         public async Task<IActionResult> Delete(int id)
         {
-            var member = await _memberService.GetMemberByIdAsync(id);
-
-            if (member == null)
+            try
             {
-                return NotFound();
+                var member = await _memberService.GetMemberByIdAsync(id);
+
+                if (member == null)
+                {
+                    return NotFound();
+                }
+                return View(member);
             }
-            return View(member);
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while fetching member: " + ex.Message;
+                return RedirectToAction("Index");
+            }
         }
 
         //post:delete
@@ -90,8 +130,17 @@ namespace bms.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> DeleteConfirm(int id)
         {
+            try
+            {
                 await _memberService.DeleteMemberAsync(id);
-            return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Member deleted successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while deleting member: " + ex.Message;
+                return RedirectToAction("Index");
+            }
         }
     }
 }
