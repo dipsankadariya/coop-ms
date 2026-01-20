@@ -7,7 +7,7 @@
 <div class="container py-5">
     <h2 class="fw-light mb-4">@Model.FullName</h2>
     
-    <form asp-action="AddShare" method="post">
+    <form asp-action="AddShare" method="post" style="max-width: 400px;">
         <input type="hidden" name="memberId" value="@Model.MemberId"/>
 
         <div class="mb-3">
