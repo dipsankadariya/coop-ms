@@ -1,4 +1,5 @@
-﻿using bms.Models;
+﻿using bms.Data.DTOs;
+using bms.Models;
 using bms.Repository.Interfaces;
 using bms.Services.Interfaces;
 
@@ -13,30 +14,39 @@ namespace bms.Services.Implementations
             _memberRepository = memberRepository;
         }
 
-        public async Task AddNewMemberAsync(Member member)
+        public async Task AddNewMemberAsync(MemberDto member)
         {
-            member.Status = "Active";
-            await _memberRepository.AddAsync(member);
+            //map the incoming member dto to entity
+           var entity= MemberMapper.MapToEntity(member);
+            await _memberRepository.AddAsync(entity);
         }
+
 
         public async Task DeleteMemberAsync(int id)
         {
-            await _memberRepository.DeleteAsync(id);
-        }
-        public async Task<IEnumerable<Member>> GetAllMembersAsync()
-        {
-             return   await _memberRepository.GetAllAsync();
+           await  _memberRepository.DeleteAsync(id);
+
         }
 
-        public async Task<Member> GetMemberByIdAsync(int id)
+        public async Task<IEnumerable<MemberDto>> GetAllMembersAsync()
         {
-            return await _memberRepository.GetByIdAsync(id);
+            var members= await _memberRepository.GetAllAsync();
+            return members.Select(member=> MemberMapper.MapToDto(member));
+
+        }
+        public async Task<MemberDto> GetMemberByIdAsync(int id)
+        {
+            var member= await _memberRepository.GetByIdAsync(id);
+            if(member==null) return null;
+
+           return MemberMapper.MapToDto(member);
         }
 
-        public async Task UpdateMemberAsync(Member member)
+        public async Task UpdateMemberAsync(MemberDto member)
         {
-           
-            await _memberRepository.UpdateAsync(member);
+            var entity= MemberMapper.MapToEntity(member);
+
+            await _memberRepository.UpdateAsync(entity);
         }
     }
 }

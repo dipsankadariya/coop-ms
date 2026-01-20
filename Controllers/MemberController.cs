@@ -1,4 +1,5 @@
-﻿using bms.Models;
+﻿using bms.Data.DTOs;
+using bms.Models;
 using bms.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
@@ -43,20 +44,20 @@ namespace bms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  async Task<IActionResult> Create(Member member)
+        public  async Task<IActionResult> Create(MemberDto memberDto)
         {
            try{
             if (ModelState.IsValid)
             {
-                await _memberService.AddNewMemberAsync(member);
+                await _memberService.AddNewMemberAsync(memberDto);
                 TempData["SuccessMessage"] = "Member added successfully.";
                 return RedirectToAction("Index");
             }
-            return View(member);
+            return View(memberDto);
            }
            catch(Exception ex){
             TempData["ErrorMessage"]= "An error occurred while creating member: " + ex.Message;
-            return View(member);
+            return View(memberDto);
            }
         }
 
@@ -85,22 +86,22 @@ namespace bms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(Member member)
+        public async Task<IActionResult> Update(MemberDto memberDto)
         {
             try
             {
                 if (ModelState.IsValid) { 
-                 await _memberService.UpdateMemberAsync(member);
+                 await _memberService.UpdateMemberAsync(memberDto);
                  TempData["SuccessMessage"] = "Member updated successfully.";
                    return RedirectToAction(nameof(Index));
                 }
 
-                return View(member);
+                return View(memberDto);
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "An error occurred while updating member: " + ex.Message;
-                return View(member);
+                return View(memberDto);
             }
         }
 
