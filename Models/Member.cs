@@ -15,7 +15,7 @@ public partial class Member
 
     public string Email { get; set; } = null!;
 
-    public string? Status { get; set; } = null!;
+    public string? Status { get; set; }
 
     public virtual ICollection<Account> Accounts { get; set; } = new List<Account>();
 

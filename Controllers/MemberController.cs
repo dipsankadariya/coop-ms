@@ -1,6 +1,7 @@
 ﻿using bms.Data.DTOs;
 using bms.Models;
 using bms.Services.Interfaces;
+using bms.ViewModels.Member;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -23,8 +24,9 @@ namespace bms.Controllers
         {
            try
            {
-            var members = await _memberService.GetAllMembersAsync();
-            return View(members);
+            var memberDtos = await _memberService.GetAllMembersAsync();
+            var memberViewModels = memberDtos.Select(MemberVmMapper.MapDtoToViewModel).ToList();
+            return View(memberViewModels);
            }
            catch(Exception ex){
             TempData["ErrorMessage"]= "An error occurred while fetching members: " + ex.Message;
@@ -44,20 +46,21 @@ namespace bms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  async Task<IActionResult> Create(MemberDto memberDto)
+        public  async Task<IActionResult> Create(MemberVm memberVm)
         {
            try{
             if (ModelState.IsValid)
             {
+                var memberDto = MemberVmMapper.MapViewModelToDto(memberVm);
                 await _memberService.AddNewMemberAsync(memberDto);
                 TempData["SuccessMessage"] = "Member added successfully.";
                 return RedirectToAction("Index");
             }
-            return View(memberDto);
+            return View(memberVm);
            }
            catch(Exception ex){
             TempData["ErrorMessage"]= "An error occurred while creating member: " + ex.Message;
-            return View(memberDto);
+            return View(memberVm);
            }
         }
 
@@ -67,13 +70,14 @@ namespace bms.Controllers
         {
             try
             {
-                var member = await _memberService.GetMemberByIdAsync(id);
-                if (member == null)
+                var memberDto = await _memberService.GetMemberByIdAsync(id);
+                if (memberDto == null)
                 {
                     return NotFound();
                 }
 
-                return View(member);
+                var memberVm = MemberVmMapper.MapDtoToViewModel(memberDto);
+                return View(memberVm);
             }
             catch (Exception ex)
             {
@@ -86,22 +90,23 @@ namespace bms.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(MemberDto memberDto)
+        public async Task<IActionResult> Update(MemberVm memberVm)
         {
             try
             {
                 if (ModelState.IsValid) { 
+                 var memberDto = MemberVmMapper.MapViewModelToDto(memberVm);
                  await _memberService.UpdateMemberAsync(memberDto);
                  TempData["SuccessMessage"] = "Member updated successfully.";
                    return RedirectToAction(nameof(Index));
                 }
 
-                return View(memberDto);
+                return View(memberVm);
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = "An error occurred while updating member: " + ex.Message;
-                return View(memberDto);
+                return View(memberVm);
             }
         }
 
@@ -111,13 +116,14 @@ namespace bms.Controllers
         {
             try
             {
-                var member = await _memberService.GetMemberByIdAsync(id);
+                var memberDto = await _memberService.GetMemberByIdAsync(id);
 
-                if (member == null)
+                if (memberDto == null)
                 {
                     return NotFound();
                 }
-                return View(member);
+                var memberVm = MemberVmMapper.MapDtoToViewModel(memberDto);
+                return View(memberVm);
             }
             catch (Exception ex)
             {
