@@ -1,7 +1,9 @@
-﻿using bms.Models;
+﻿using bms.Data.DTOs;
+using bms.Models;
 using bms.Repositories.Interfaces;
 using bms.Repository.Interfaces;
 using bms.Services.Interfaces;
+using bms.Mappers;
 
 namespace bms.Services.Implementations
 {
@@ -16,9 +18,9 @@ namespace bms.Services.Implementations
            _memberShareRepository = memberShareRepository;
             _memberRepository = memberRepository;
         }
-        public async Task AddMemberShareAsync(int memberId, decimal shareAmount, string shareType)
+        public async Task AddMemberShareAsync(MemberShareDto memberShareDto)
         {
-            var member = await _memberRepository.GetByIdAsync(memberId);  
+            var member = await _memberRepository.GetByIdAsync(memberShareDto.MemberId);  
             if(member==null)
             {
                 throw new Exception("Member not found");
@@ -27,31 +29,27 @@ namespace bms.Services.Implementations
             {
                 throw new Exception("Member must be active inorder to contribute shares");
             }
-            if (shareAmount < 0)
+            if (memberShareDto.Amount <= 0)
             {
                 throw new Exception("Share Amount must be greater than 0");
             }
 
-            var memberShare = new MemberShare
-            {
-                MemberId = memberId,
-                Amount = shareAmount,
-                ShareType = shareType,
-                ContributionDate = DateTime.Now
-            };
+            var entity= MemberShareMapper.MapToEntity(memberShareDto);    
+            entity.ContributionDate=DateTime.Now;
+            await _memberShareRepository.AddAsync(entity);
             
-            await _memberShareRepository.AddAsync(memberShare);
-
         }
 
-        public async Task<IEnumerable<MemberShare>> GetAllMemberSharesByMemberIdAsync(int memberId)
+        public async Task<IEnumerable<MemberShareDto>> GetAllMemberSharesByMemberIdAsync(int memberId)
         {
             var member = await _memberRepository.GetByIdAsync(memberId);
             if (member == null) {
                 throw new Exception("Member not found");
             }
 
-            return await _memberShareRepository.GetAllForMemberByIdAsync(memberId);
+            var memberShares= await _memberShareRepository.GetAllForMemberByIdAsync(memberId);
+            var memberShareDto=memberShares.Select(MemberShareMapper.MapToDto);
+            return memberShareDto;
 
         }
 

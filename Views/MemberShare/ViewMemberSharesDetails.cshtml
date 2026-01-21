@@ -1,13 +1,12 @@
-@model IEnumerable<bms.Models.MemberShare>
+@model IEnumerable<bms.Data.DTOs.MemberShareDto>
 
 @{
     ViewData["Title"] = "Member Share Details";
-    var member = Model.FirstOrDefault()?.Member;
 }
 
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-light text-dark">Share Details for @(member?.FullName ?? "Member")</h2>
+        <h2 class="fw-light text-dark">Member Share Details</h2>
         <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Back to List</a>
     </div>
     

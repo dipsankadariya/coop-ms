@@ -1,4 +1,4 @@
-@model bms.Models.Member
+@model bms.ViewModels.Member.MemberVm
 
 @{
     ViewData["Title"] = "Member Share - Add Share";
@@ -8,16 +8,17 @@
     <h2 class="fw-light mb-4">@Model.FullName</h2>
     
     <form asp-action="AddShare" method="post" style="max-width: 400px;">
-        <input type="hidden" name="memberId" value="@Model.MemberId"/>
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="MemberId" value="@Model.MemberId"/>
 
         <div class="mb-3">
-            <label for="shareAmount" class="form-label">Share Amount</label>
-            <input type="number" step="0.01" name="shareAmount" id="shareAmount" class="form-control" placeholder="Enter share amount" required />
+            <label for="Amount" class="form-label">Share Amount</label>
+            <input type="number" step="0.01" name="Amount" id="Amount" class="form-control" placeholder="Enter share amount" required />
         </div>
 
         <div class="mb-3">
-            <label for="shareType" class="form-label">Share Type</label>
-            <select name="shareType" id="shareType" class="form-select" required>
+            <label for="ShareType" class="form-label">Share Type</label>
+            <select name="ShareType" id="ShareType" class="form-select" required>
                 <option value="">Select Share Type</option>
                 <option value="Ordinary">Ordinary Share</option>
                 <option value="Additional">Additional Share</option>
@@ -32,6 +33,7 @@
 </div>
 
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         document.querySelector('form').addEventListener('submit', function(e) {
             var btn = document.getElementById('submitBtn');

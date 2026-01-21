@@ -3,9 +3,13 @@ using bms.Repositories.Interfaces;
 using bms.Repository.Interfaces;
 using bms.Services.Implementations;
 using bms.Services.Interfaces;
+using bms.ViewModels.Member;
+using bms.ViewModels.MemberShare;
+using bms.Mappers.ViewModelMappers;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using bms.Data.DTOs;
 
 namespace bms.Controllers
 {
@@ -19,28 +23,32 @@ namespace bms.Controllers
             _memberService = memberService;
             _memberShareService = memberShareService;
         }
-
+           //list all the members
+        [HttpGet]
         public async Task<IActionResult> Index(){
             try
             {
-                var members = await _memberService.GetAllMembersAsync();
-                return View(members);
+             var memberDto= await _memberService.GetAllMembersAsync();
+           var memberVm = memberDto.Select(MemberVmMapper.MapDtoToViewModel).ToList();
+            return View(memberVm);
             }
             catch(Exception ex)
             {
                 TempData["ErrorMessage"] = "An error occurred while loading members: " + ex.Message;
-                return View(new List<Member>());
+                return View(new List<MemberVm>());
             }
         }
 
-        //add share get form
-        public async Task<IActionResult> AddShare(int memberId){
+        //get: add share form
+        [HttpGet]
+        public async Task<IActionResult> AddShare(int  memberId){
           try{
-            var member= await _memberService.GetMemberByIdAsync(memberId);
-            if(member==null){
+            var memberDto= await _memberService.GetMemberByIdAsync(memberId);
+            if(memberDto==null){
                 return NotFound();
             }
-            return View(member);
+          var memberVm= MemberVmMapper.MapDtoToViewModel(memberDto);
+          return View(memberVm);
           }
           catch(Exception ex){
             TempData["ErrorMessage"]= "An error occurred while loading  form: " + ex.Message;
@@ -52,14 +60,16 @@ namespace bms.Controllers
         //add share post
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddShare(int memberId, decimal shareAmount, string shareType)
+        public async Task<IActionResult> AddShare(MemberShareVm memberShareVm)
         {
            try{
-             if(ModelState.IsValid){
-                await _memberShareService.AddMemberShareAsync(memberId, shareAmount, shareType);
-                TempData["SuccessMessage"] = "Share added successfully.";
-                return RedirectToAction("Index");
-            }
+        if (ModelState.IsValid)
+        {
+          var memberShareDto= MemberShareVmMapper.MapVmToDto(memberShareVm);
+           await _memberShareService.AddMemberShareAsync(memberShareDto);
+            TempData["SuccessMessage"] = "Share added successfully.";
+            return RedirectToAction("Index");
+        }
             // Validation failed
             TempData["ErrorMessage"] = "Invalid data provided.";
             return RedirectToAction("Index");
