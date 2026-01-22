@@ -1,0 +1,55 @@
+@model bms.ViewModels.Auth.LoginVm
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container-fluid min-vh-100 d-flex align-items-center">
+    <div class="row w-100">
+        <div class="col-12 col-md-6 col-lg-4 px-5">
+            <div class="mb-4">
+                <h1 class="text-white fw-bold mb-2" style="font-size: 2.5rem;">Login</h1>
+                <p class="text-white mb-0">Please login to continue</p>
+            </div>
+            
+            <form asp-action="Login" method="post">
+                <div class="mb-2">
+                    <label asp-for="Username" class="form-label text-white mb-1"></label>
+                    <input asp-for="Username" class="form-control bg-dark text-white border-secondary" 
+                           style="max-width: 400px;" placeholder="Enter username" />
+                    <span asp-validation-for="Username" class="text-danger small"></span>
+                </div>
+                
+                <div class="mb-2">
+                    <label asp-for="Password" class="form-label text-white mb-1"></label>
+                    <input asp-for="Password" class="form-control bg-dark text-white border-secondary" 
+                           style="max-width: 400px;" placeholder="Enter password" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input asp-for="RememberMe" class="form-check-input bg-dark border-secondary" />
+                    <label asp-for="RememberMe" class="form-check-label text-white"></label>
+                </div>
+                
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-2 small"></div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn px-5 py-2 text-white fw-semibold" 
+                            style="max-width: 400px; background-color: #1e3a8a;">Login</button>
+                </div>
+                
+                <div class="mt-3">
+                    <p class="text-white mb-0">
+                        Don't have an account? 
+                        <a asp-action="Register" class="text-white text-decoration-underline">Register here</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

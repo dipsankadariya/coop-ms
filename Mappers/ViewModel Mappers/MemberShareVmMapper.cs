@@ -18,7 +18,7 @@ namespace bms.Mappers.ViewModelMappers
         {
             MemberId=memberShareVm.MemberId,
             Amount=memberShareVm.Amount,
-            ShareType=memberShareVm.ShareType,
+            ShareType=memberShareVm.ShareType!,
 
         };
     }

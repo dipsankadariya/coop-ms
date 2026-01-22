@@ -137,3 +137,4 @@ C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.pdb
 C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.genruntimeconfig.cache
 C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\ref\bms.dll
 C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.sourcelink.json
+C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\BCrypt.Net-Next.dll

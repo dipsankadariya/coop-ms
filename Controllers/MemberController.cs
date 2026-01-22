@@ -2,12 +2,14 @@
 using bms.Models;
 using bms.Services.Interfaces;
 using bms.ViewModels.Member;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace bms.Controllers
 {
+    [Authorize]
     public class MemberController : Controller
     {
 

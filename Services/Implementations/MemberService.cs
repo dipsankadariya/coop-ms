@@ -34,7 +34,7 @@ namespace bms.Services.Implementations
             return members.Select(member=> MemberMapper.MapToDto(member));
 
         }
-        public async Task<MemberDto> GetMemberByIdAsync(int id)
+        public async Task<MemberDto?> GetMemberByIdAsync(int id)
         {
             var member= await _memberRepository.GetByIdAsync(id);
             if(member==null) return null;

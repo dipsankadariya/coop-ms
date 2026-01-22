@@ -35,7 +35,7 @@ namespace bms.Repository.Implementations
             return await _context.Members.ToListAsync();
         }
 
-        public async Task<Member> GetByIdAsync(int memberId)
+        public async Task<Member?> GetByIdAsync(int memberId)
         {
             return await _context.Members.FindAsync(memberId);
         }
