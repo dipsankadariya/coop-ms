@@ -8,7 +8,6 @@ using bms.ViewModels.MemberShare;
 using bms.Mappers.ViewModelMappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using bms.Data.DTOs;
 

@@ -15,6 +15,8 @@ public partial class Account
 
     public string Status { get; set; } = null!;
 
+    public DateTime CreatedAt { get; set; }
+
     public virtual Member Member { get; set; } = null!;
 
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();

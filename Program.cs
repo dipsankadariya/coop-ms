@@ -27,6 +27,10 @@ builder.Services.AddScoped<IMemberShareService, MemberShareService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+//adding for member accounts
+builder.Services.AddScoped<IMemberAccountRepository, MemberAccountRepository>();
+builder.Services.AddScoped<IMemberAccountService, MemberAccountService>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

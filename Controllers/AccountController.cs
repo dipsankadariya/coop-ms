@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using bms.Data.DTOs;
 using bms.Services.Interfaces;
 using bms.ViewModels.Auth;
 using Microsoft.AspNetCore.Authentication;
@@ -33,13 +34,17 @@ public class AccountController:Controller
                 return View(loginVm);
             }
 
-          var user= await _authService.ValidateUserAsync(loginVm.Username,loginVm.Password);
-
-            if (user == null)
+            UserDto? user = null;
+            try
+            {
+                user = await _authService.ValidateUserAsync(loginVm.Username, loginVm.Password);
+            }
+            catch (Exception)
             {
                 ModelState.AddModelError("", "Invalid username or password");
                 return View(loginVm);
             }
+
             // Set up authentication cookie
 
             var claims= new List<Claim>

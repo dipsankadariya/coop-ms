@@ -4,7 +4,6 @@ using bms.Services.Interfaces;
 using bms.ViewModels.Member;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace bms.Controllers
@@ -136,7 +135,7 @@ namespace bms.Controllers
 
         //post:delete
         [HttpPost, ActionName("Delete")]
-        [AutoValidateAntiforgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(int id)
         {
             try

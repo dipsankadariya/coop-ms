@@ -1,4 +1,5 @@
 ﻿using bms.Data.DTOs;
+using bms.Mappers;
 using bms.Models;
 using bms.Repository.Interfaces;
 using bms.Services.Interfaces;
@@ -44,9 +45,20 @@ namespace bms.Services.Implementations
 
         public async Task UpdateMemberAsync(MemberDto member)
         {
-            var entity= MemberMapper.MapToEntity(member);
+            var existingMember= await _memberRepository.GetByIdAsync(member.MemberId);
+            if(existingMember==null)
+            {
+                throw new Exception("Member not found");
+            }
 
-            await _memberRepository.UpdateAsync(entity);
+            //update the member details
+            existingMember.FullName= member.FullName;
+            existingMember.Email= member.Email;
+            existingMember.PhoneNumber= member.PhoneNumber;
+            existingMember.Status= member.Status ?? "Active";
+            existingMember.Address= member.Address;
+
+            await _memberRepository.UpdateAsync(existingMember);
         }
     }
 }

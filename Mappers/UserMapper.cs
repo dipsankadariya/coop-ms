@@ -1,7 +1,9 @@
 using bms.Data.DTOs;
 using bms.Models;
 
-public static class UserMapper
+namespace bms.Mappers
+{
+    public static class UserMapper
 {
     //map  to dto
      public static UserDto MapToDto(User user)=> new UserDto
@@ -27,4 +29,5 @@ public static class UserMapper
         CreatedDate=userDto.CreatedDate
 
     };
+    }
 }

@@ -1,7 +1,9 @@
 using bms.Data.DTOs;
 using bms.Models;
 
-public static  class MemberMapper
+namespace bms.Mappers
+{
+    public static class MemberMapper
 {   //Without using static keyword, every time we  wanted to map, we would  have to create a new MemberMapper object:something like thsi:
     //var mapper = new MemberMapper();
     //var dto = mapper.MapToDto(memberEntity);
@@ -29,4 +31,5 @@ public static  class MemberMapper
         Email=memberDto.Email,
         Status=memberDto.Status??"Active"
     };
+    }
 }
