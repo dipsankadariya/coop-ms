@@ -4,10 +4,11 @@ using bms.Services.Interfaces;
 using bms.ViewModels.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bms.Controllers
-{
+{ 
 public class AccountController:Controller
     {
         private readonly IAuthService _authService;

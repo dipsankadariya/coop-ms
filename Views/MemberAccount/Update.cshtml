@@ -1,0 +1,75 @@
+@model bms.ViewModels.MemberAccount.MemberAccountVm
+
+@{
+    ViewData["Title"] = "Update Account";
+    var member = ViewBag.Member as bms.ViewModels.Member.MemberVm;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="fw-bold text-white mb-3">Update Account Status</h2>
+            @if (member != null)
+            {
+                <p class="text-white-50 mb-4">Member: @member.FullName</p>
+            }
+
+            <div class="card bg-dark text-white mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Account Details</h5>
+                    <p class="card-text mb-1"><strong>Account ID:</strong> @Model.AccountId</p>
+                    <p class="card-text mb-1"><strong>Account Type:</strong> @Model.AccountType</p>
+                    <p class="card-text mb-0"><strong>Current Balance:</strong> ₹@Model.Balance.ToString("N2")</p>
+                </div>
+            </div>
+
+            <div style="min-height: 60px;">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error!</strong> @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (Model.Balance != 0)
+                {
+                    <div class="alert alert-warning text-dark alert-dismissible fade show" role="alert">
+                        <strong>⚠️ Warning:</strong> This account has a balance of ₹@Model.Balance.ToString("N2"). You cannot deactivate an account with a non-zero balance.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+            </div>
+
+            <form asp-action="Update" method="post" class="bg-dark p-4 rounded">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="AccountId" />
+                <input type="hidden" asp-for="MemberId" />
+                <input type="hidden" asp-for="AccountType" />
+                <input type="hidden" asp-for="Balance" />
+
+                <div class="mb-3">
+                    <label asp-for="Status" class="form-label text-white">Account Status</label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                    <small class="form-text text-muted">
+                        Note: Accounts with non-zero balance cannot be deactivated.
+                    </small>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-warning">Update Status</button>
+                    <a asp-action="ViewAccounts" asp-route-memberId="@Model.MemberId" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

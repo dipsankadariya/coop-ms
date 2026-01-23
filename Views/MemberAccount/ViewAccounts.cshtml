@@ -1,0 +1,89 @@
+@model IEnumerable<bms.ViewModels.MemberAccount.MemberAccountVm>
+
+@{
+    ViewData["Title"] = "View Accounts";
+    var member = ViewBag.Member as bms.ViewModels.Member.MemberVm;
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-white">Member Accounts</h2>
+            @if (member != null)
+            {
+                <p class="text-white-50 mb-0">@member.FullName</p>
+            }
+        </div>
+        @if (member != null)
+        {
+            <a asp-action="Create" asp-route-memberId="@member.MemberId" class="btn btn-outline-primary btn-sm">
+                Add New Account
+            </a>
+        }
+    </div>
+
+    <div style="min-height: 60px;">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Success!</strong> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error!</strong> @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-borderless table-hover align-middle">
+            <thead class="text-muted">
+                <tr>
+                    <th>Account ID</th>
+                    <th>Account Type</th>
+                    <th>Balance</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var account in Model)
+                {
+                    <tr>
+                        <td>@account.AccountId</td>
+                        <td>@account.AccountType</td>
+                        <td>₹@account.Balance.ToString("N2")</td>
+                        <td>
+                            <span class="badge rounded-pill @(account.Status == "Active" ? "bg-success" : "bg-secondary")">
+                                @account.Status
+                            </span>
+                        </td>
+                        <td>@account.CreatedAt.ToString("MMM dd, yyyy")</td>
+                        <td class="text-end">
+                            <a asp-action="Update" asp-route-accountId="@account.AccountId" class="btn btn-sm btn-outline-warning">
+                                Update Status
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info mt-3" role="alert">
+            No accounts found for this member. Create one to get started.
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary">Back to Members</a>
+    </div>
+</div>

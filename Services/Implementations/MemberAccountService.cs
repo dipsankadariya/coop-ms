@@ -35,8 +35,7 @@ namespace bms.Services.Implementations
 
             // Set initial values for new account
             account.AccountId = 0; 
-            account.Balance = 0;
-            account.Status = "Active";
+            account.Status = string.IsNullOrEmpty(account.Status) ? "Active" : account.Status;
             account.CreatedAt = DateTime.Now;
 
             // Convert the incoming dto into entity before saving into db
@@ -56,9 +55,9 @@ namespace bms.Services.Implementations
         public async Task<IEnumerable<MemberAccountDto>> GetAllAccountsByMemberIdAsync(int memberId)
         {
             var member = await _memberRepository.GetByIdAsync(memberId);
-            if(member == null)
+            if(member == null || member.Status != "Active")
             {
-                throw new Exception("Member not found");
+                throw new Exception("Either member is not  active or member not found.");
             }
             var memberAccounts = await _memberAccountRepository.GetAllByMemberIdAsync(memberId);
             return memberAccounts.Select(account => MemberAccountMapper.MaptoDto(account)).ToList();

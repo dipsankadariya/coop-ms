@@ -11,5 +11,7 @@ namespace bms.ViewModels.MemberAccount
         public decimal Balance { get; set; }
 
         public string Status { get; set; } = string.Empty;
+
+        public DateTime CreatedAt { get; set; }
     }
 }

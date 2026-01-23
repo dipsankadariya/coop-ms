@@ -7,6 +7,8 @@ namespace bms.Services.Interfaces
     {
         Task<IEnumerable<MemberDto>> GetAllMembersAsync();
 
+        Task<IEnumerable<MemberDto>> GetActiveMembersAsync();
+
         Task<MemberDto?> GetMemberByIdAsync(int id);
 
         Task AddNewMemberAsync(MemberDto member);

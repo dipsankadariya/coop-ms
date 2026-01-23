@@ -1,0 +1,64 @@
+@model bms.ViewModels.MemberAccount.MemberAccountVm
+
+@{
+    ViewData["Title"] = "Create Account";
+    var member = ViewBag.Member as bms.ViewModels.Member.MemberVm;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="fw-bold text-white mb-3">Create Account</h2>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form asp-action="Create" method="post" class="bg-dark p-4 rounded">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="MemberId" />
+
+                <div class="mb-3">
+                    <label asp-for="AccountType" class="form-label text-white">Account Type</label>
+                    <select asp-for="AccountType" class="form-select">
+                        <option value="">-- Select Account Type --</option>
+                        <option value="Savings">Savings</option>
+                        <option value="Current">Current</option>
+                        <option value="Fixed Deposit">Fixed Deposit</option>
+                        <option value="Loan">Loan</option>
+                    </select>
+                    <span asp-validation-for="AccountType" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Balance" class="form-label text-white">Initial Balance</label>
+                    <input asp-for="Balance" class="form-control" type="number" step="0.01" min="0" placeholder="Enter initial balance" />
+                    <span asp-validation-for="Balance" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Status" class="form-label text-white">Status</label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

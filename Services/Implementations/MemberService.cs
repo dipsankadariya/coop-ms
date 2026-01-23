@@ -35,6 +35,15 @@ namespace bms.Services.Implementations
             return members.Select(member=> MemberMapper.MapToDto(member));
 
         }
+
+        public async Task<IEnumerable<MemberDto>> GetActiveMembersAsync()
+        {
+            var members = await _memberRepository.GetAllAsync();
+            return members
+                .Where(m => m.Status == "Active")
+                .Select(member => MemberMapper.MapToDto(member));
+        }
+
         public async Task<MemberDto?> GetMemberByIdAsync(int id)
         {
             var member= await _memberRepository.GetByIdAsync(id);

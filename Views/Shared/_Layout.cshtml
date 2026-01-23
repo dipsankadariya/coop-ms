@@ -60,14 +60,14 @@
                                 </ul>
                             </li>
 
-                            <!-- Account Dropdown -->
+                            <!-- Member Account Dropdown -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="accountseDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Accounts
+                                    Member Accounts
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="accountseDropdown">
                                     <li>
-                                        <a class="dropdown-item" asp-controller="MemberShare" asp-action="Index">Add Account</a>
+                                        <a class="dropdown-item" asp-controller="MemberAccount" asp-action="Index">Manage Accounts</a>
                                     </li>
                                 </ul>
                             </li>
@@ -110,20 +110,6 @@
 
     <div class="container">
         <main role="main" class="pb-3">
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    @TempData["SuccessMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    @TempData["ErrorMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
             @RenderBody()
         </main>
     </div>

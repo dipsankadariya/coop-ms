@@ -1,0 +1,69 @@
+@model IEnumerable<bms.ViewModels.Member.MemberVm>
+
+@{
+    ViewData["Title"] = "Member Accounts";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-white">Member Accounts Management</h2>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-borderless table-hover align-middle">
+            <thead class="text-muted">
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model)
+                {
+                    <tr>
+                        <td>@member.FullName</td>
+                        <td>@member.Email</td>
+                        <td>
+                            <span class="badge rounded-pill @(member.Status == "Active" ? "bg-success" : "bg-secondary")">
+                                @member.Status
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="ViewAccounts" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-outline-info me-1">
+                                View Account Details
+                            </a>
+                            <a asp-action="Create" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-outline-primary">
+                                Add New Account
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info mt-3" role="alert">
+            No members found. Please add members first.
+        </div>
+    }
+</div>
