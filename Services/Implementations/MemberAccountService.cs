@@ -13,10 +13,13 @@ namespace bms.Services.Implementations
 
         private readonly IMemberRepository _memberRepository;
 
-        public  MemberAccountService(IMemberAccountRepository memberAccountRepository, IMemberRepository memberRepository)
+        private readonly IMemberShareRepository _memberShareRepository;
+
+        public  MemberAccountService(IMemberAccountRepository memberAccountRepository, IMemberRepository memberRepository, IMemberShareRepository memberShareRepository)
         {
             _memberAccountRepository = memberAccountRepository;
             _memberRepository = memberRepository;
+            _memberShareRepository = memberShareRepository;
         }
 
         public async Task AddMemberAccountAsync(MemberAccountDto account)
@@ -32,7 +35,15 @@ namespace bms.Services.Implementations
             {
                 throw new Exception("Cannot create account for inactive member");
             }
-
+            
+            //##rule://check if member has at least 1 share bought
+            
+            //get all membershares
+            var memberShares = await _memberShareRepository.GetAllForMemberByIdAsync(account.MemberId);
+            if(memberShares == null || !memberShares.Any())
+            {
+                throw new Exception("Member must have at least one share bought to create an account");
+            }
             // Set initial values for new account
             account.AccountId = 0; 
             account.Status = string.IsNullOrEmpty(account.Status) ? "Active" : account.Status;

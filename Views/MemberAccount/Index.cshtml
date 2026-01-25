@@ -50,9 +50,23 @@
                             <a asp-action="ViewAccounts" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-outline-info me-1">
                                 View Account Details
                             </a>
-                            <a asp-action="Create" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-outline-primary">
-                                Add New Account
-                            </a>
+                            @if (member.ShareCount > 0)
+                            {
+                                <a asp-action="Create" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-outline-primary">
+                                    Add New Account
+                                </a>
+                            }
+                            else
+                            {
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-secondary" 
+                                        disabled
+                                        data-bs-toggle="tooltip" 
+                                        data-bs-placement="top" 
+                                        title="Member must buy at least one share to create an account">
+                                    Add New Account
+                                </button>
+                            }
                         </td>
                     </tr>
                 }
@@ -67,3 +81,13 @@
         </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        // Initialize Bootstrap tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+}

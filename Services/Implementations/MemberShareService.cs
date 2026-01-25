@@ -58,10 +58,11 @@ namespace bms.Services.Implementations
             var member = await _memberRepository.GetByIdAsync(memberId);
             if (member == null)
             {
-                throw new Exception("Member not found");
+                return 0; // Return 0 instead of throwing exception
             }
 
-            return await _memberShareRepository.GetTotalForMemberAsync(memberId);
+            var total = await _memberShareRepository.GetTotalForMemberAsync(memberId);
+            return total;
         }
     }
 }

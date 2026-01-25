@@ -13,5 +13,7 @@ namespace bms.ViewModels.Member
         public string Email { get; set; } = string.Empty;
 
         public string Status { get; set; } = "Active";
+
+        public int ShareCount { get; set; } = 0;
 }
 }

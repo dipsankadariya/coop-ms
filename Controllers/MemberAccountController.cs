@@ -12,11 +12,13 @@ namespace bms.Controllers
     {
         private readonly IMemberAccountService _memberAccountService;
         private readonly IMemberService _memberService;
+        private readonly IMemberShareService _memberShareService;
 
-        public MemberAccountController(IMemberAccountService memberAccountService, IMemberService memberService)
+        public MemberAccountController(IMemberAccountService memberAccountService, IMemberService memberService, IMemberShareService memberShareService)
         {
             _memberAccountService = memberAccountService;
             _memberService = memberService;
+            _memberShareService = memberShareService;
         }
 
         // GET: MemberAccount/Index
@@ -28,6 +30,22 @@ namespace bms.Controllers
             {
                 var membersDtos = await _memberService.GetActiveMembersAsync();
                 var membersVms = membersDtos.Select(MemberVmMapper.MapDtoToViewModel).ToList();
+                
+                // Get share count for each member
+                foreach (var memberVm in membersVms)
+                {
+                    try
+                    {
+                        var totalShares = await _memberShareService.GetTotalShareByMemberIdAsync(memberVm.MemberId);
+                        memberVm.ShareCount = totalShares > 0 ? 1 : 0;
+                    }
+                    catch
+                    {
+                        // If error getting shares, assume member has no shares
+                        memberVm.ShareCount = 0;
+                    }
+                }
+                
                 return View(membersVms);
             }
             catch (Exception ex)

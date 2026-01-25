@@ -1,7 +1,7 @@
 @model bms.ViewModels.Member.MemberVm
 
 @{
-    ViewData["Title"] = "Member Share - Add Share";
+    ViewData["Title"] = "Member Share - Buy Share";
 }
 
 <div class="container py-5">
@@ -26,7 +26,7 @@
         </div>
 
         <div class="mb-3">
-            <button type="submit" class="btn btn-primary me-2" id="submitBtn">Add Share</button>
+            <button type="submit" class="btn btn-primary me-2" id="submitBtn">Buy Share</button>
             <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
         </div>
     </form>
@@ -42,7 +42,7 @@
                 return false;
             }
             btn.disabled = true;
-            btn.textContent = 'Adding...';
+            btn.textContent = 'Processing...';
         });
     </script>
 }

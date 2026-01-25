@@ -27,7 +27,12 @@ namespace bms.Repositories.Implementations
 
         public async Task<decimal> GetTotalForMemberAsync(int memberId)
         {
-            return await _context.MemberShares.Where(s => s.MemberId == memberId).SumAsync(s => s.Amount);
+            var shares = await _context.MemberShares.Where(s => s.MemberId == memberId).ToListAsync();
+            if (shares == null || !shares.Any())
+            {
+                return 0;
+            }
+            return shares.Sum(s => s.Amount);
         }
     }
 }
