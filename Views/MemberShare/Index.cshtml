@@ -41,9 +41,15 @@
                             }
                             else
                             {
+                               
+                                  <span data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Member must be Active to buy shares">
                                 <button class="btn btn-sm btn-outline-secondary me-1" disabled>
                                     Buy Share
                                 </button>
+                </span>
+                       
                             }
                             <a asp-action="ViewMemberSharesDetails" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-outline-secondary">
                                 View Details

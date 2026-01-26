@@ -47,25 +47,34 @@
                             </span>
                         </td>
                         <td class="text-end">
-                            <a asp-action="ViewAccounts" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-outline-info me-1">
+                            <a asp-action="ViewAccounts"
+                               asp-route-memberId="@member.MemberId"
+                               class="btn btn-sm btn-outline-info me-1">
                                 View Account Details
                             </a>
+
                             @if (member.ShareCount > 0)
                             {
-                                <a asp-action="Create" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-outline-primary">
+                                <a asp-action="Create"
+                                   asp-route-memberId="@member.MemberId"
+                                   class="btn btn-sm btn-outline-primary">
                                     Add New Account
                                 </a>
                             }
                             else
                             {
-                                <button type="button" 
-                                        class="btn btn-sm btn-outline-secondary" 
-                                        disabled
-                                        data-bs-toggle="tooltip" 
-                                        data-bs-placement="top" 
-                                        title="Member must buy at least one share to create an account">
-                                    Add New Account
-                                </button>
+                                <!-- Wrapper span for tooltip -->
+                                <span data-bs-toggle="tooltip"
+                                      data-bs-placement="top"
+                                      title="Member must buy at least one share to create an account">
+
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-secondary"
+                                            disabled>
+                                        Add New Account
+                                    </button>
+
+                                </span>
                             }
                         </td>
                     </tr>
@@ -85,9 +94,9 @@
 @section Scripts {
     <script>
         // Initialize Bootstrap tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
     </script>
 }

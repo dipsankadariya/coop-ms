@@ -27,6 +27,7 @@ namespace bms.Controllers
            //list all the members
         [HttpGet]
         public async Task<IActionResult> Index(){
+            TempData.Clear(); // Clear old messages from other controllers
             try
             {
              var memberDto= await _memberService.GetAllMembersAsync();
