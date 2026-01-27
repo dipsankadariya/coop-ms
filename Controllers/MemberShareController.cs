@@ -13,7 +13,7 @@ using bms.Data.DTOs;
 
 namespace bms.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin,Staff")]
     public class MemberShareController : Controller
     {
         private readonly IMemberService _memberService;

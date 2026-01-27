@@ -1,4 +1,4 @@
-﻿using bms.Data;
+using bms.Data;
 using bms.Models;
 using bms.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -7,9 +7,9 @@ namespace bms.Repository.Implementations
 {
     public class MemberRepository : IMemberRepository
     {
-        private readonly BmsDbContext _context;
+        private readonly bms.Data.BmsDbContext _context;
 
-        public MemberRepository(BmsDbContext context)
+        public MemberRepository(bms.Data.BmsDbContext context)
         {
             _context = context;
         }

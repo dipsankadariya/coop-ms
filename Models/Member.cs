@@ -22,6 +22,4 @@ public partial class Member
     public virtual ICollection<Loan> Loans { get; set; } = new List<Loan>();
 
     public virtual ICollection<MemberShare> MemberShares { get; set; } = new List<MemberShare>();
-
-    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }

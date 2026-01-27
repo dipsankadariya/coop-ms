@@ -7,9 +7,9 @@ namespace bms.Repositories.Implementations
 {
     public class MemberAccountRepository : IMemberAccountRepository
     {
-        private readonly BmsDbContext _context;
+        private readonly bms.Data.BmsDbContext _context;
         
-        public MemberAccountRepository(BmsDbContext context)
+        public MemberAccountRepository(bms.Data.BmsDbContext context)
         {
             _context = context;
         }

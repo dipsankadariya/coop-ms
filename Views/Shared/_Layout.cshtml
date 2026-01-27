@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/bms.styles.css" asp-append-version="true" />
 
+    <style>
+        /* Add border to the Admin Panel dropdown */
+        .admin-dropdown-toggle {
+            border: 1px solid #dc3545; /* red border to match text-danger */
+            border-radius: 5px;
+            padding: 0.375rem 0.75rem;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -20,8 +28,9 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" id="navbarSupportedContent">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Menu -->
+                    <ul class="navbar-nav me-auto">
                         <!-- Home -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -75,8 +84,22 @@
                         }
                     </ul>
 
-                    <!-- User Menu -->
-                    <ul class="navbar-nav ms-auto">
+                    <!-- Right Menu: Admin Panel + User Dropdown -->
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown me-2">
+                                <a class="nav-link dropdown-toggle text-danger admin-dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin Panel
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Users">User Management</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item dropdown">

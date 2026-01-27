@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace bms.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin,Staff")]
     public class MemberAccountController : Controller
     {
         private readonly IMemberAccountService _memberAccountService;

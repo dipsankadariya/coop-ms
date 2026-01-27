@@ -1,3 +1,13 @@
+C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.csproj.AssemblyReference.cache
+C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.AssemblyInfoInputs.cache
+C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.AssemblyInfo.cs
+C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.csproj.CoreCompileInputs.cache
+C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.RazorAssemblyInfo.cache
+C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.RazorAssemblyInfo.cs
+C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.sourcelink.json
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\appsettings.json
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\bms.staticwebassets.runtime.json
@@ -9,6 +19,7 @@ C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\bms.dll
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\bms.pdb
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\Azure.Identity.dll
+C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\BCrypt.Net-Next.dll
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\Humanizer.dll
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
@@ -111,15 +122,6 @@ C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\runtimes\win\lib\net6.0\Sys
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.csproj.AssemblyReference.cache
-C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\rpswa.dswa.cache.json
-C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.AssemblyInfoInputs.cache
-C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.AssemblyInfo.cs
-C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.csproj.CoreCompileInputs.cache
-C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.RazorAssemblyInfo.cache
-C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.RazorAssemblyInfo.cs
 C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -136,5 +138,3 @@ C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\refint\bms.dll
 C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.pdb
 C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.genruntimeconfig.cache
 C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\ref\bms.dll
-C:\Users\dipsa\source\repos\bms\bms\obj\Debug\net8.0\bms.sourcelink.json
-C:\Users\dipsa\source\repos\bms\bms\bin\Debug\net8.0\BCrypt.Net-Next.dll

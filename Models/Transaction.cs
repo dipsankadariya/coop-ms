@@ -7,11 +7,9 @@ public partial class Transaction
 {
     public int TransactionId { get; set; }
 
-    public int MemberId { get; set; }
-
     public int AccountId { get; set; }
 
-    public string? TransactionType { get; set; }
+    public string TransactionType { get; set; } = null!;
 
     public decimal Amount { get; set; }
 
@@ -20,6 +18,4 @@ public partial class Transaction
     public string? Notes { get; set; }
 
     public virtual Account Account { get; set; } = null!;
-
-    public virtual Member Member { get; set; } = null!;
 }

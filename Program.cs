@@ -26,6 +26,7 @@ builder.Services.AddScoped<IMemberShareService, MemberShareService>();
 //adding for authentication
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 //adding for member accounts
 builder.Services.AddScoped<IMemberAccountRepository, MemberAccountRepository>();
@@ -41,6 +42,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 var app = builder.Build();
+// Seed default admin user
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<BmsDbContext>();
+    await DbSeeder.SeedDefaultAdminAsync(context);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

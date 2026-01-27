@@ -39,7 +39,7 @@ namespace bms.Services.Implementations
             Username=username,
             Email=email,
             PasswordHash=BCrypt.Net.BCrypt.HashPassword(password),
-            Role="User",
+            Role="Staff",
             IsActive=true,
             CreatedDate=DateTime.Now,
         };

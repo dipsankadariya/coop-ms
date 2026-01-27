@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace bms.Controllers
 {
-    [Authorize]
+    [Authorize(Roles =("Admin,Staff"))]
     public class MemberController : Controller
     {
 
