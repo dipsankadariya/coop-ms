@@ -32,6 +32,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMemberAccountRepository, MemberAccountRepository>();
 builder.Services.AddScoped<IMemberAccountService, MemberAccountService>();
 
+//adding for dashboard
+builder.Services.AddScoped<IHomeRepository, HomeRepository>();
+builder.Services.AddScoped<IHomeService, HomeService>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

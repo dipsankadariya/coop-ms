@@ -1,8 +1,81 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model bms.ViewModels.HomeVm
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary fw-bold">Dashboard</h2>
+
+    <div class="row g-4">
+
+        <!-- Members Card -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-people-fill fs-1 text-primary"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title fw-semibold">Members</h5>
+                        <p class="mb-1">Total: <strong>@Model.TotalMembers</strong></p>
+                        <p class="mb-1 text-success">Active: @Model.ActiveMembers</p>
+                        <p class="mb-0 text-danger">Inactive: @Model.InactiveMembers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff Card -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-person-badge-fill fs-1 text-warning"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title fw-semibold">Staff</h5>
+                        <p class="mb-1">Total Staff: <strong>@Model.TotalStaff</strong></p>
+                        <p class="mb-1 text-success">Active Staff: @Model.ActiveStaff</p>
+                        <p class="mb-0 text-danger">Inactive Staff: @Model.InactiveStaff</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admins Card -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-shield-lock-fill fs-1 text-danger"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title fw-semibold">Admins</h5>
+                        <p class="mb-1">Total Admins: <strong>@Model.Admins</strong></p>
+                        <p class="mb-1 text-success">Active Admins: @Model.ActiveAdmins</p>
+                        <p class="mb-0 text-danger">Inactive Admins: @Model.InactiveAdmins</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accounts Card -->
+        <div class="col-md-4 mt-4">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-wallet2 fs-1 text-success"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title fw-semibold">Accounts</h5>
+                        <p class="mb-1">Total Accounts: <strong>@Model.TotalAccounts</strong></p>
+                        <p class="mb-1 text-success">Active Accounts: @Model.ActiveAccounts</p>
+                        <p class="mb-0 text-danger">Inactive Accounts: @Model.InactiveAccounts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>

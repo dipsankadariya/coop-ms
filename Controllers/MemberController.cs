@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace bms.Controllers
 {
-    [Authorize(Roles =("Admin,Staff"))]
+    
     public class MemberController : Controller
     {
 
@@ -35,7 +35,6 @@ namespace bms.Controllers
             return RedirectToAction("Index");
            }
         }
-
 
         //getT: Members/Create
         [HttpGet]

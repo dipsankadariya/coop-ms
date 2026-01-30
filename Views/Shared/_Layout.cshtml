@@ -35,13 +35,19 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
-                            <!-- Privacy -->
+                    
+                        <!-- About -->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                            </li>
+                         
+                        <!-- Privacy -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
 
                             <!-- Member Dropdown -->
                             <li class="nav-item dropdown">
@@ -94,7 +100,10 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Users">User Management</a>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Users">Manage staff members</a>
+                                    </li>
+                                     <li>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Register">Add new staff member</a>
                                     </li>
                                 </ul>
                             </li>
@@ -122,9 +131,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
-                            <li class="nav-item">
+                            @* <li class="nav-item">
                                 <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
-                            </li>
+                            </li> *@
                         }
                     </ul>
                 </div>

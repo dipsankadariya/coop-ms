@@ -9,7 +9,7 @@
         <div class="col-12 col-md-6 col-lg-4 px-5">
             <div class="mb-4">
                 <h1 class="text-white fw-bold mb-2" style="font-size: 2.5rem;">Login</h1>
-                <p class="text-white mb-0">Please login to continue</p>
+                <p class="text-white mb-0">Authorized People Only</p>
             </div>
             
             <form asp-action="Login" method="post">
@@ -40,10 +40,10 @@
                 </div>
                 
                 <div class="mt-3">
-                    <p class="text-white mb-0">
+                    @* <p class="text-white mb-0">
                         Don't have an account? 
                         <a asp-action="Register" class="text-white text-decoration-underline">Register here</a>
-                    </p>
+                    </p> *@
                 </div>
             </form>
         </div>

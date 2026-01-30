@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using bms.Models;
+using bms.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace bms.Controllers
@@ -7,15 +8,18 @@ namespace bms.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IHomeService _homeService; 
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,IHomeService homeService)
         {
             _logger = logger;
+            _homeService = homeService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var dashboardData = await _homeService.GetDashboardStatisticsAsync();
+            return View(dashboardData);
         }
 
         public IActionResult Privacy()

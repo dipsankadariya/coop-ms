@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using bms.Data.DTOs;
 using bms.Services.Interfaces;
+using bms.ViewModels.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 public class AdminController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IAuthService _authService;
 
-        public AdminController(IUserService userService)
+        public AdminController(IUserService userService, IAuthService authService)
         {
             _userService = userService;
+            _authService = authService; 
         }
     
     //get admin/index, show all staff
@@ -121,4 +124,47 @@ public class AdminController : Controller
             return RedirectToAction("Users");
         }
     }
+
+        
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterVm registerVm)
+        {
+           try{
+        if (!ModelState.IsValid)
+            {
+                return View(registerVm);
+            }
+
+            var user= await _authService.UsernameExistsAsync(registerVm.Username);
+            if(user)
+            {
+                ModelState.AddModelError("Username","Username already exists");
+                return View(registerVm);
+            }
+
+            var email= await _authService.EmailExistsAsync(registerVm.Email);
+            if(email)
+            {
+                ModelState.AddModelError("Email","Email already exists");
+                return View(registerVm);
+            }
+
+            await _authService.RegisterUserAsync(registerVm.Username,registerVm.Email,registerVm.Password);
+            TempData["SuccessMessage"]="Registration successful. Please log in.";
+            return RedirectToAction("Users");
+           }
+           catch(Exception ex)
+           {
+            TempData["ErrorMessage"]= "Registration failed " + ex.Message;
+            return View(registerVm);
+           }
+    }
+
     }

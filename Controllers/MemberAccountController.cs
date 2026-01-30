@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace bms.Controllers
 {
-    [Authorize(Roles ="Admin,Staff")]
+      [Authorize(Roles =("Admin,Staff"))]
     public class MemberAccountController : Controller
     {
         private readonly IMemberAccountService _memberAccountService;
@@ -24,6 +24,7 @@ namespace bms.Controllers
         // GET: MemberAccount/Index
         // Show all active members to choose from
         [HttpGet]
+
         public async Task<IActionResult> Index()
         {
             TempData.Clear(); // Clear old messages from other controllers
