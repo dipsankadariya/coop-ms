@@ -36,6 +36,9 @@ builder.Services.AddScoped<IMemberAccountService, MemberAccountService>();
 builder.Services.AddScoped<IHomeRepository, HomeRepository>();
 builder.Services.AddScoped<IHomeService, HomeService>();
 
+builder.Services.AddScoped<IAccountTransactionRepository, AccountTransactionRepository>();
+builder.Services.AddScoped<IAccountTransactionService, AccountTransactionService>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

@@ -7,7 +7,7 @@
 <div class="container py-5">
     <h2 class="fw-light mb-4">@Model.FullName</h2>
     
-    <form asp-action="AddStaff" method="post" style="max-width: 400px;">
+    <form asp-action="AddShare" method="post" style="max-width: 400px;">
         @Html.AntiForgeryToken()
         <input type="hidden" name="MemberId" value="@Model.MemberId"/>
 

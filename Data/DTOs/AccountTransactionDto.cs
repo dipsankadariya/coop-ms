@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace bms.Models;
-
-public partial class Transaction
-{
-    public int TransactionId { get; set; }
+public class AccountTransactionDto
+{  public int TransactionId { get; set; }
 
     public int AccountId { get; set; }
 
@@ -17,6 +11,4 @@ public partial class Transaction
 
     public decimal BalanceAfter { get; set; }
     public string? Notes { get; set; }
-
-    public virtual Account Account { get; set; } = null!;
 }
