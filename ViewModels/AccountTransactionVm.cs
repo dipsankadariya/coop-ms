@@ -1,19 +1,14 @@
-using System.Security.Principal;
-
-public class AccountTransactionVm
+namespace bms.ViewModels
 {
-  
-    public int TransactionId { get; set; }
-
-    public int AccountId { get; set; }
-
-    public string TransactionType { get; set; } = null!;
-
-    public decimal Amount { get; set; }
-
-    public DateTime TransactionDate { get; set; }
-
-    public decimal BalanceAfter { get; set; }
-    public string? Notes { get; set; }
-
+    public class AccountTransactionVm
+    {
+        public int TransactionId { get; set; }
+        public int AccountId { get; set; }
+        public string TransactionType { get; set; } = null!;
+        public decimal Amount { get; set; }
+        public DateTime TransactionDate { get; set; }
+        public decimal BalanceAfter { get; set; }
+        public string? Notes { get; set; }
+        public string MemberName { get; set; } = string.Empty;
+    }
 }

@@ -1,0 +1,37 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model IEnumerable<bms.ViewModels.AccountTransactionVm>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<p>Transaction Details for  @ViewBag.MemberName</p>
+
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Notes</th>
+                <th>BalanceAfter</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transaction in Model)
+            {
+                <tr>
+                    <td>@transaction.TransactionDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@transaction.TransactionType</td>
+                    <td>@transaction.Amount.ToString("C")</td>
+                    <td>@transaction.Notes</td>
+                    <td>@transaction.BalanceAfter.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

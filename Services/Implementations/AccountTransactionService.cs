@@ -1,6 +1,7 @@
 
 using bms.Models;
 using bms.Repositories.Interfaces;
+using bms.Mappers;
 
 public class AccountTransactionService : IAccountTransactionService
 {
@@ -44,16 +45,31 @@ public class AccountTransactionService : IAccountTransactionService
         }
 
         //map to entity
-        var entity= accountTransactionMapper.MapToEntity(accountTransactionDto);
+        var entity= AccountTransactionMapper.MapToEntity(accountTransactionDto);
         //set the balance after
         entity.BalanceAfter=newBalance;
         entity.TransactionDate=DateTime.Now;
 
         //update the account balance
         account.Balance = newBalance;
-       await _memberAccountRepository.UpdateAsync(account);
 
-       //save the new transactions
+       //add  transaction to  the context,not saving yet.
+
         await _accountTransactionRepository.AddTransactionAsync(entity);
+
+        await _memberAccountRepository.UpdateAsync(account);
+    }
+
+    public async Task<IEnumerable<AccountTransactionDto>> GetAllTransactionsByAccountIdAsync(int accountId)
+    {
+        var account= await _memberAccountRepository.GetByIdAsync(accountId);
+        if (account == null)
+        {
+            throw new Exception("Account not found");
+        }
+
+        var transactions= await _accountTransactionRepository.GetAllTransactionsByAccountIdAsync(accountId);
+        var transactionssDto= transactions.Select(AccountTransactionMapper.MapToDto).ToList();
+        return transactionssDto;
     }
 }

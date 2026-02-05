@@ -1,6 +1,7 @@
 
 using bms.Data;
 using bms.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class AccountTransactionRepository : IAccountTransactionRepository
 {
@@ -17,4 +18,8 @@ public class AccountTransactionRepository : IAccountTransactionRepository
          await  _context.SaveChangesAsync();
     }
 
+    public async Task<IEnumerable<Transaction>> GetAllTransactionsByAccountIdAsync(int accountId)
+    {
+        return  await _context.Transactions.Where(transaction => transaction.AccountId == accountId).ToListAsync();
+    }
 }

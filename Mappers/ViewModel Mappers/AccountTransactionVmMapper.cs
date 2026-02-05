@@ -1,4 +1,9 @@
 using bms.Models;
+using bms.ViewModels;
+using bms.Mappers; // Add this at the top of AccountTransactionController.cs
+
+namespace bms.Mappers
+{
 public static class AccountTransactionVmMapper
 {
     public static AccountTransactionDto MapVmToDto(AccountTransactionVm accountTransactionVm)=>new AccountTransactionDto
@@ -21,4 +26,5 @@ public static class AccountTransactionVmMapper
         BalanceAfter=accountTransactionDto.BalanceAfter,
         Notes=accountTransactionDto.Notes
     };
+}
 }

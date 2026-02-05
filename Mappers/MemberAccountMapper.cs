@@ -14,7 +14,7 @@ namespace bms.Mappers
       AccountType= memberAccount.AccountType,
       Balance= memberAccount.Balance,
       Status= memberAccount.Status,
-      CreatedAt= memberAccount.CreatedAt
+      CreatedAt= memberAccount.CreatedAt,
     };
 
     //convert to entity(model)
