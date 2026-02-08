@@ -19,6 +19,78 @@
 
 ---
 
+## 👨‍💼 Admin Panel (Admin-Only Features)
+
+### 19. User Management (/Admin/Users)
+- Displays all users (Staff and Admins) in a table
+- Shows: Username, Email, Role, Status
+- Actions available per user:
+  - View Details
+  - Toggle Status (Activate/Deactivate)
+  - Change Role (Admin ↔ Staff)
+  - Delete User
+- Admin cannot modify their own account (self-protection)
+
+### 20. User Details (/Admin/UserDetails/{id})
+- Shows complete user information
+- Displays: Username, Email, Role, Status, Created Date
+- Action buttons for status toggle, role change, and deletion
+
+### 21. Toggle User Status (/Admin/ToggleStatus/{id})
+- Activates or deactivates a user account
+- Deactivated users cannot log in
+- Current admin cannot deactivate themselves
+
+### 22. Change User Role (/Admin/ChangeRole/{id})
+- Switches user role between Admin and Staff
+- Current admin cannot demote themselves
+- Role determines access to Admin panel features
+
+### 23. Delete User (/Admin/DeleteUser/{id})
+- Permanently removes user from system
+- Current admin cannot delete themselves
+- Confirmation required before deletion
+
+### 24. Register New Staff (/Admin/Register)
+- Admin-only feature to create new user accounts
+- Form fields: Username, Email, Password, Confirm Password
+- Validates:
+  - Username uniqueness
+  - Email uniqueness
+  - Password requirements
+- New users created with Staff role by default
+- On success: Redirects to Users list
+
+---
+---
+
+## 🏠 Dashboard (Home)
+
+### 18. Dashboard (/Home/Index)
+- Overview statistics displayed in card format:
+  - **Members**: Total, Active, Inactive counts
+  - **Staff**: Total, Active, Inactive counts
+  - **Admins**: Total, Active, Inactive counts
+  - **Accounts**: Total, Active, Inactive counts
+- Transaction statistics:
+  - Total Transactions count
+  - Deposit count and total amount
+  - Withdrawal count and total amount
+- Account Type Distribution:
+  - Savings, Current, Fixed Deposit, Loan account counts
+- Quick navigation links to respective management sections
+- Role-based visibility (Admin sees staff management link)
+
+---
+
+## 🔐 Authorization & Roles
+
+### Role-Based Access Control
+- **Admin**: Full access to all features including Admin Panel
+- **Staff**: Access to Member, Account, Share, and Transaction management
+- Both roles: Protected with `[Authorize]` attribute
+
+
 ## 👥 Member Management Flow
 
 ### 4. View Members (/Member/Index)
@@ -140,81 +212,3 @@
   - Notes
 - "Add Transaction" button for quick deposits/withdrawals
 
----
-
-## 🏠 Dashboard (Home)
-
-### 18. Dashboard (/Home/Index)
-- Overview statistics displayed in card format:
-  - **Members**: Total, Active, Inactive counts
-  - **Staff**: Total, Active, Inactive counts
-  - **Admins**: Total, Active, Inactive counts
-  - **Accounts**: Total, Active, Inactive counts
-- Transaction statistics:
-  - Total Transactions count
-  - Deposit count and total amount
-  - Withdrawal count and total amount
-- Account Type Distribution:
-  - Savings, Current, Fixed Deposit, Loan account counts
-- Quick navigation links to respective management sections
-- Role-based visibility (Admin sees staff management link)
-
----
-
-## 👨‍💼 Admin Panel (Admin-Only Features)
-
-### 19. User Management (/Admin/Users)
-- Displays all users (Staff and Admins) in a table
-- Shows: Username, Email, Role, Status
-- Actions available per user:
-  - View Details
-  - Toggle Status (Activate/Deactivate)
-  - Change Role (Admin ↔ Staff)
-  - Delete User
-- Admin cannot modify their own account (self-protection)
-
-### 20. User Details (/Admin/UserDetails/{id})
-- Shows complete user information
-- Displays: Username, Email, Role, Status, Created Date
-- Action buttons for status toggle, role change, and deletion
-
-### 21. Toggle User Status (/Admin/ToggleStatus/{id})
-- Activates or deactivates a user account
-- Deactivated users cannot log in
-- Current admin cannot deactivate themselves
-
-### 22. Change User Role (/Admin/ChangeRole/{id})
-- Switches user role between Admin and Staff
-- Current admin cannot demote themselves
-- Role determines access to Admin panel features
-
-### 23. Delete User (/Admin/DeleteUser/{id})
-- Permanently removes user from system
-- Current admin cannot delete themselves
-- Confirmation required before deletion
-
-### 24. Register New Staff (/Admin/Register)
-- Admin-only feature to create new user accounts
-- Form fields: Username, Email, Password, Confirm Password
-- Validates:
-  - Username uniqueness
-  - Email uniqueness
-  - Password requirements
-- New users created with Staff role by default
-- On success: Redirects to Users list
-
----
-
-## 🔐 Authorization & Roles
-
-### Role-Based Access Control
-- **Admin**: Full access to all features including Admin Panel
-- **Staff**: Access to Member, Account, Share, and Transaction management
-- Both roles: Protected with `[Authorize]` attribute
-
-### Route Protection
-- `/Admin/*` routes: Admin role only
-- `/AccountTransaction/*` routes: Admin and Staff roles
-- Other management routes: Authenticated users
-
----
