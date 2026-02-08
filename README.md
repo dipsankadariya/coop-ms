@@ -1,6 +1,6 @@
 # Coop-ms 
 
-### 1. User Registration (/Account/Register) ie staff and admins
+### 1. User Registration (/Account/Register)
 - New user enters Username, Email, Password,.
 - Password is hashed using BCrypt before storing in Users table
 - User account created in database
@@ -12,7 +12,7 @@
 - Cookie expires after 24 hours
 - Redirects to Home page
 
-### 3. Authorization //only authorized staffs added by admins or the staff can access.
+### 3. Authorization 
 - All controllers are protected with [Authorize] attribute
 - User must be logged in to access any features
 - User info displayed in navbar with role and logout option
@@ -218,5 +218,3 @@
 - Other management routes: Authenticated users
 
 ---
-
-I'm actively working on this — README will be updated as more features are added. This is the current flow of the application.
