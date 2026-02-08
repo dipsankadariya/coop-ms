@@ -1,5 +1,7 @@
 # Coop-ms 
 
+<img width="1903" height="928" alt="image" src="https://github.com/user-attachments/assets/3acfac14-5965-4c4a-a883-985bc0077bc1" />
+
 ### 1. User Registration (/Account/Register)
 - New user enters Username, Email, Password,.
 - Password is hashed using BCrypt before storing in Users table
