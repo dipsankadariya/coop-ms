@@ -1,48 +1,49 @@
-@model bms.ViewModels.Member.MemberVm
-
-@{
-    ViewData["Title"] = "Member Share - Buy Share";
-}
+@model bms.ViewModels.MemberShare.MemberShareVm
 
 <div class="container py-5">
-    <h2 class="fw-light mb-4">@Model.FullName</h2>
-    
-    <form asp-action="AddShare" method="post" style="max-width: 400px;">
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="MemberId" value="@Model.MemberId"/>
+    <div class="row">
+        <div class="col-md-6 col-lg-5">
+           
+            <h2 class="fw-light mb-4">Buy Share</h2>
 
-        <div class="mb-3">
-            <label for="Amount" class="form-label">Share Amount</label>
-            <input type="number" step="0.01" name="Amount" id="Amount" class="form-control" placeholder="Enter share amount" required />
-        </div>
+            <form asp-action="AddShare" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-        <div class="mb-3">
-            <label for="ShareType" class="form-label">Share Type</label>
-            <select name="ShareType" id="ShareType" class="form-select" required>
-                <option value="">Select Share Type</option>
-                <option value="Ordinary">Ordinary Share</option>
-                <option value="Additional">Additional Share</option>
-            </select>
-        </div>
+                <!-- Member Selection -->
+                <div class="mb-3">
+                    <label asp-for="MemberId" class="form-label">Select Member</label>
+                    <select asp-for="MemberId" class="form-control">
+                        <option value="">-- Select Member --</option>
+                        @foreach(var member in Model.MemberList)
+                        {
+                            <option value="@member.MemberId">@member.FullName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="MemberId" class="text-danger small"></span>
+                </div>
 
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary me-2" id="submitBtn">Buy Share</button>
-            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <!-- Share Amount -->
+                <div class="mb-3">
+                    <label asp-for="Amount" class="form-label">Share Amount</label>
+                    <input asp-for="Amount" type="number" class="form-control" placeholder="Enter share amount" />
+                    <span asp-validation-for="Amount" class="text-danger small"></span>
+                </div>
+
+                <!-- Share Type -->
+                <div class="mb-3">
+                    <label asp-for="ShareType" class="form-label">Share Type</label>
+                    <input type="text" class="form-control" value="@Model.ShareType" disabled style="background-color: #282933; color: #ffffff;" />
+                    <input asp-for="ShareType" type="hidden" />
+                    <span asp-validation-for="ShareType" class="text-danger small"></span>
+                </div>
+
+                <!-- Buttons -->
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-outline-primary me-2">Buy Share</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        document.querySelector('form').addEventListener('submit', function(e) {
-            var btn = document.getElementById('submitBtn');
-            if (btn.disabled) {
-                e.preventDefault();
-                return false;
-            }
-            btn.disabled = true;
-            btn.textContent = 'Processing...';
-        });
-    </script>
-}

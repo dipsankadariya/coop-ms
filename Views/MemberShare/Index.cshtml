@@ -1,63 +1,52 @@
 ﻿@model IEnumerable<bms.ViewModels.Member.MemberVm>
 
 @{
-    ViewData["Title"] = "Member Share";
+    ViewData["Title"] = "Active Members - Member Share";
 }
 
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-white">Member Share</h2>
+        <h2 class="fw-bold text-white">Active Members</h2>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-borderless table-hover align-middle" style="table-layout: fixed;">
-            <thead class="text-muted">
-                <tr>
-                    <th style="width: 15%;">Member ID</th>
-                    <th style="width: 20%;">Name</th>
-                    <th style="width: 15%;">Status</th>
-                    <th style="width: 20%;">Email</th>
-                    <th class="text-end" style="width: 30%;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var member in Model)
-                {
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-borderless table-hover align-middle">
+                <thead class="text-muted">
                     <tr>
-                        <td>@member.MemberId</td>
-                        <td>@member.FullName</td>
-                        <td>
-                            <span class="badge rounded-pill @(member.Status == "Active" ? "bg-success" : "bg-secondary")">
-                                @member.Status
-                            </span>
-                        </td>
-                        <td>@member.Email</td>
-                        <td class="text-end">
-                            @if (member.Status == "Active")
-                            {
-                                <a asp-action="AddShare" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-outline-primary me-1">
-                                    Buy Share
-                                </a>
-                            }
-                            else
-                            {
-                               
-                                  <span data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Member must be Active to buy shares">
-                                <button class="btn btn-sm btn-outline-secondary me-1" disabled>
-                                    Buy Share
-                                </button>
-                </span>
-                       
-                            }
-                            <a asp-action="ViewMemberSharesDetails" asp-route-memberId="@member.MemberId" class="btn btn-sm btn-outline-secondary">
-                                View Details
-                            </a>
-                        </td>
+                        <th>Member ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var member in Model)
+                    {
+                        <tr>
+                            <td>@member.MemberId</td>
+                            <td>@member.FullName</td>
+                            <td>
+                                <span class="badge rounded-pill bg-success">
+                                    @member.Status
+                                </span>
+                            </td>
+                            <td>@member.Email</td>
+                            <td>@member.PhoneNumber</td>
+                            <td>@member.Address</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            No active members found.
+        </div>
+    }
 </div>

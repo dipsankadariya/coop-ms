@@ -4,6 +4,7 @@ using bms.ViewModels.Member;
 using bms.ViewModels.MemberAccount;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace bms.Controllers
 {
@@ -57,29 +58,79 @@ namespace bms.Controllers
             }
         }
 
-        // GET: MemberAccount/Create?memberId=1
-        // Show create account form for a member
+        // GET: MemberAccount/SelectAccount
+        // Page to select a member and view their accounts
         [HttpGet]
-        public async Task<IActionResult> Create(int memberId)
+        public async Task<IActionResult> SelectAccount(int? memberId)
         {
             try
             {
-                var memberDto = await _memberService.GetMemberByIdAsync(memberId);
-                if (memberDto == null)
+                // Get all active members for the dropdown
+                var membersDtos = await _memberService.GetActiveMembersAsync();
+                var memberList = membersDtos.Select(m => new SelectListItem
                 {
-                    TempData["ErrorMessage"] = "Member not found.";
-                    return RedirectToAction("Index");
+                    Value = m.MemberId.ToString(),
+                    Text = m.FullName,
+                    Selected = memberId.HasValue && m.MemberId == memberId.Value
+                }).ToList();
+
+                ViewBag.MemberList = memberList;
+                ViewBag.SelectedMemberId = memberId;
+
+                // If a member is selected, get their accounts
+                List<MemberAccountVm> accounts = new List<MemberAccountVm>();
+                if (memberId.HasValue && memberId.Value > 0)
+                {
+                    var memberDto = await _memberService.GetMemberByIdAsync(memberId.Value);
+                    if (memberDto != null)
+                    {
+                        ViewBag.Member = MemberVmMapper.MapDtoToViewModel(memberDto);
+                        var accountDtos = await _memberAccountService.GetAllAccountsByMemberIdAsync(memberId.Value);
+                        accounts = accountDtos.Select(MemberAccountVmMapper.MapDtoToVm).ToList();
+                    }
                 }
 
-                // Send member info via ViewBag (for display only)
-                var memberVm = MemberVmMapper.MapDtoToViewModel(memberDto);
-                ViewBag.Member = memberVm;
+                return View(accounts);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while loading accounts: " + ex.Message;
+                return View(new List<MemberAccountVm>());
+            }
+        }
 
-                // Main model = empty account form
+        // GET: MemberAccount/Create?memberId=1 (optional)
+        // Show create account form - allows selecting member if not provided
+        [HttpGet]
+        public async Task<IActionResult> Create(int? memberId)
+        {
+            try
+            {
+                // Get all active members for the dropdown
+                var membersDtos = await _memberService.GetActiveMembersAsync();
+                var memberList = membersDtos.Select(m => new SelectListItem
+                {
+                    Value = m.MemberId.ToString(),
+                    Text = m.FullName,
+                    Selected = memberId.HasValue && m.MemberId == memberId.Value
+                }).ToList();
+
                 var accountVm = new MemberAccountVm
                 {
-                    MemberId = memberId
+                    MemberId = memberId ?? 0,
+                    MemberList = memberList,
+                    Status = "Active"
                 };
+
+                // If memberId provided, get member info for display
+                if (memberId.HasValue)
+                {
+                    var memberDto = await _memberService.GetMemberByIdAsync(memberId.Value);
+                    if (memberDto != null)
+                    {
+                        ViewBag.Member = MemberVmMapper.MapDtoToViewModel(memberDto);
+                    }
+                }
 
                 return View(accountVm);
             }
@@ -107,9 +158,14 @@ namespace bms.Controllers
                     return RedirectToAction("ViewAccounts", new { memberId = memberAccountVm.MemberId });
                 }
 
-                // Reload member info again for the view
-                var memberDto = await _memberService.GetMemberByIdAsync(memberAccountVm.MemberId);
-                ViewBag.Member = MemberVmMapper.MapDtoToViewModel(memberDto);
+                // Reload member list for the dropdown
+                var membersDtos = await _memberService.GetActiveMembersAsync();
+                memberAccountVm.MemberList = membersDtos.Select(m => new SelectListItem
+                {
+                    Value = m.MemberId.ToString(),
+                    Text = m.FullName,
+                    Selected = m.MemberId == memberAccountVm.MemberId
+                }).ToList();
 
                 return View(memberAccountVm);
             }
@@ -117,8 +173,14 @@ namespace bms.Controllers
             {
                 TempData["ErrorMessage"] = "An error occurred while creating the member account: " + ex.Message;
 
-                var memberDto = await _memberService.GetMemberByIdAsync(memberAccountVm.MemberId);
-                ViewBag.Member = MemberVmMapper.MapDtoToViewModel(memberDto);
+                // Reload member list for the dropdown
+                var membersDtos = await _memberService.GetActiveMembersAsync();
+                memberAccountVm.MemberList = membersDtos.Select(m => new SelectListItem
+                {
+                    Value = m.MemberId.ToString(),
+                    Text = m.FullName,
+                    Selected = m.MemberId == memberAccountVm.MemberId
+                }).ToList();
 
                 return View(memberAccountVm);
             }

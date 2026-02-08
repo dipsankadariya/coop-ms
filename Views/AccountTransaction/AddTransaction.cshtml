@@ -1,66 +1,107 @@
 @model bms.ViewModels.AccountTransactionVm
 
-<form method="post" asp-action="AddTransaction" asp-controller="AccountTransaction" class="mt-4">
+@{
+    ViewData["Title"] = "Add Transaction";
+}
 
-    <h3 class="mb-4 text-primary">Add a New Transaction</h3>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="fw-bold text-white mb-4">Add Transaction</h2>
 
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
 
+            <form asp-action="AddTransaction" method="post" class="bg-dark p-4 rounded">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
+                <!-- Member Selection -->
+                <div class="mb-3">
+                    <label asp-for="MemberId" class="form-label text-white">Select Member</label>
+                    <select asp-for="MemberId" asp-items="Model.MemberList" class="form-select" id="memberSelect">
+                        <option value="">-- Select Member --</option>
+                    </select>
+                    <span asp-validation-for="MemberId" class="text-danger small"></span>
+                </div>
 
-    <!-- Validation Summary for Model Errors -->
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <!-- Account Selection -->
+                <div class="mb-3">
+                    <label asp-for="AccountId" class="form-label text-white">Select Account</label>
+                    <select asp-for="AccountId" asp-items="Model.AccountList" class="form-select" id="accountSelect">
+                        <option value="">-- Select Account --</option>
+                    </select>
+                    <span asp-validation-for="AccountId" class="text-danger small"></span>
+                </div>
 
-    <div class="w-100 d-flex justify-content-center">
-        <div class="w-100 w-md-50">
+                <!-- Transaction Type -->
+                <div class="mb-3">
+                    <label asp-for="TransactionType" class="form-label text-white">Transaction Type</label>
+                    <select asp-for="TransactionType" class="form-select">
+                        <option value="">-- Select Type --</option>
+                        <option value="Deposit">Deposit</option>
+                        <option value="Withdrawal">Withdrawal</option>
+                    </select>
+                    <span asp-validation-for="TransactionType" class="text-danger small"></span>
+                </div>
 
-            <!-- Hidden AccountId -->
-            <input type="hidden" asp-for="AccountId" />
+                <!-- Amount -->
+                <div class="mb-3">
+                    <label asp-for="Amount" class="form-label text-white">Amount (₹)</label>
+                    <input asp-for="Amount" type="number" step="0.01" min="0.01" class="form-control" placeholder="Enter amount" />
+                    <span asp-validation-for="Amount" class="text-danger small"></span>
+                </div>
 
-            <!-- Transaction Type -->
-            <div class="mb-3">
-                <label asp-for="TransactionType" class="form-label fw-bold">Transaction Type</label>
-                <select asp-for="TransactionType" class="form-select">
-                    <option value="Deposit">Deposit</option>
-                    <option value="Withdrawal">Withdrawal</option>
-                </select>
-                <span asp-validation-for="TransactionType" class="text-danger"></span>
-            </div>
+                <!-- Notes -->
+                <div class="mb-3">
+                    <label asp-for="Notes" class="form-label text-white">Notes (optional)</label>
+                    <textarea asp-for="Notes" class="form-control" placeholder="Enter any notes..." rows="2"></textarea>
+                </div>
 
-
-            <div class="mb-3">
-                <label asp-for="Amount" class="form-label fw-bold">Amount</label>
-                <input asp-for="Amount" type="number" min="0" required class="form-control" placeholder="Enter amount" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-
-         
-            <div class="mb-3">
-                <label asp-for="Notes" class="form-label fw-bold">Notes (optional)</label>
-                <textarea asp-for="Notes" class="form-control" placeholder="Enter any notes..." rows="3"></textarea>
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-
-            
-            <div class="mt-4 text-center">
-                <button type="submit" class="btn btn-primary btn-lg">Add Transaction</button>
-            </div>
-
+                <!-- Buttons -->
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Add Transaction</button>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-</form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('memberSelect').addEventListener('change', function() {
+            var memberId = this.value;
+            var accountSelect = document.getElementById('accountSelect');
+            
+            // Clear current options
+            accountSelect.innerHTML = '<option value="">-- Select Account --</option>';
+            
+            if (memberId) {
+                fetch('@Url.Action("GetAccountsByMember", "AccountTransaction")?memberId=' + memberId)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(function(account) {
+                            var option = document.createElement('option');
+                            option.value = account.value;
+                            option.textContent = account.text;
+                            accountSelect.appendChild(option);
+                        });
+                    });
+            }
+        });
+    </script>
+}

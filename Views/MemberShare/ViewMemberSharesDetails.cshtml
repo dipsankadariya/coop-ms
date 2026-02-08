@@ -1,51 +1,34 @@
-@model IEnumerable<bms.Data.DTOs.MemberShareDto>
-
-@{
-    ViewData["Title"] = "Member Share Details";
-}
+@model bms.ViewModels.MemberShare.MemberShareVm
 
 <div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-light text-white">Member Share Details</h2>
-        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Back to List</a>
-    </div>
-    
-    @if (Model.Any())
-    {
-        <div class="mb-4">
-            <span class="text-muted">Total Shares:</span> <strong class="fs-5">@Model.Sum(s => s.Amount).ToString("C")</strong>
-        </div>
+    <div class="row">
+        <div class="col-md-6 col-lg-5">
+           
+            <h2 class="fw-light mb-4">View Share Details</h2>
 
-        <div class="table-responsive">
-            <table class="table table-borderless table-hover align-middle">
-                <thead class="text-muted">
-                    <tr>
-                        <th>Share ID</th>
-                        <th>Amount</th>
-                        <th>Share Type</th>
-                        <th>Contribution Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var share in Model.OrderByDescending(s => s.ContributionDate))
-                    {
-                        <tr>
-                            <td>@share.ShareId</td>
-                            <td>@share.Amount.ToString("C")</td>
-                            <td>
-                                <span class="badge rounded-pill bg-primary">@share.ShareType</span>
-                            </td>
-                            <td>@share.ContributionDate.ToString("MMM dd, yyyy hh:mm tt")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <form asp-action="GetMemberSharesDetails" method="get" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Member Selection -->
+                <div class="mb-3">
+                    <label asp-for="MemberId" class="form-label">Select Member</label>
+                    <select asp-for="MemberId" name="memberId" class="form-control">
+                        <option value="">-- Select Member --</option>
+                        @foreach(var member in Model.MemberList)
+                        {
+                            <option value="@member.MemberId">@member.FullName</option>
+                        }
+                    </select>
+                    <span asp-validation-for="MemberId" class="text-danger small"></span>
+                </div>
+
+               
+
+                <!-- Buttons -->
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-outline-primary me-2">View Share Details</button>
+                </div>
+            </form>
         </div>
-    }
-    else
-    {
-        <div class="alert alert-info" role="alert">
-            No share contributions found for this member.
-        </div>
-    }
+    </div>
 </div>

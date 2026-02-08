@@ -33,6 +33,23 @@ public class HomeRepository : IHomeRepository
         var activeAccounts = await _context.Accounts.CountAsync(a => a.Status.ToLower() == "active");
         var inactiveAccounts = Math.Max(0, totalAccounts - activeAccounts);
 
+        // Transaction statistics
+        var totalTransactions = await _context.Transactions.CountAsync();
+        var depositCount = await _context.Transactions.CountAsync(t => t.TransactionType.ToLower() == "deposit");
+        var withdrawalCount = await _context.Transactions.CountAsync(t => t.TransactionType.ToLower() == "withdrawal");
+        var totalDeposits = await _context.Transactions
+            .Where(t => t.TransactionType.ToLower() == "deposit")
+            .SumAsync(t => (decimal?)t.Amount) ?? 0;
+        var totalWithdrawals = await _context.Transactions
+            .Where(t => t.TransactionType.ToLower() == "withdrawal")
+            .SumAsync(t => (decimal?)t.Amount) ?? 0;
+
+        // Account type distribution
+        var savingsAccounts = await _context.Accounts.CountAsync(a => a.AccountType.ToLower() == "savings");
+        var currentAccounts = await _context.Accounts.CountAsync(a => a.AccountType.ToLower() == "current");
+        var fixedDepositAccounts = await _context.Accounts.CountAsync(a => a.AccountType.ToLower() == "fixed deposit");
+        var loanAccounts = await _context.Accounts.CountAsync(a => a.AccountType.ToLower() == "loan");
+
        
         return new HomeVm
         {
@@ -53,7 +70,21 @@ public class HomeRepository : IHomeRepository
          
             TotalAccounts = totalAccounts,
             ActiveAccounts = activeAccounts,
-            InactiveAccounts = inactiveAccounts
+            InactiveAccounts = inactiveAccounts,
+
+            // Transaction stats
+            TotalTransactions = totalTransactions,
+            DepositCount = depositCount,
+            WithdrawalCount = withdrawalCount,
+            TotalDeposits = totalDeposits,
+            TotalWithdrawals = totalWithdrawals,
+
+            // Account type distribution
+            SavingsAccounts = savingsAccounts,
+            CurrentAccounts = currentAccounts,
+            FixedDepositAccounts = fixedDepositAccounts,
+            LoanAccounts = loanAccounts
         };
     }
 }
+

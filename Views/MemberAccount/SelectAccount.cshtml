@@ -1,0 +1,128 @@
+@model IEnumerable<bms.ViewModels.MemberAccount.MemberAccountVm>
+
+@{
+    ViewData["Title"] = "View Account Details";
+    var memberList = ViewBag.MemberList as IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>;
+    var selectedMemberId = ViewBag.SelectedMemberId as int?;
+    var member = ViewBag.Member as bms.ViewModels.Member.MemberVm;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h2 class="fw-bold text-white mb-4">View Account Details</h2>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- Member Selection Form -->
+            <div class="bg-dark p-4 rounded mb-4">
+                <form asp-action="SelectAccount" method="get">
+                    <div class="row align-items-end">
+                        <div class="col-md-8">
+                            <label class="form-label text-white">Select Member</label>
+                            <select name="memberId" class="form-select">
+                                <option value="">-- Select a Member --</option>
+                                @if (memberList != null)
+                                {
+                                    @foreach (var item in memberList)
+                                    {
+                                        <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">View Accounts</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Member Info -->
+            @if (member != null)
+            {
+                <div class="bg-dark p-3 rounded mb-4">
+                    <h5 class="text-white mb-2">Member Details</h5>
+                    <div class="row text-white-50">
+                        <div class="col-md-4">
+                            <strong>Name:</strong> @member.FullName
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Email:</strong> @member.Email
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Phone:</strong> @member.PhoneNumber
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Accounts Table -->
+            @if (selectedMemberId.HasValue && selectedMemberId.Value > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table table-borderless table-hover align-middle">
+                        <thead class="text-muted">
+                            <tr>
+                                <th>Account ID</th>
+                                <th>Account Type</th>
+                                <th>Balance</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var account in Model)
+                            {
+                                <tr>
+                                    <td>@account.AccountId</td>
+                                    <td>@account.AccountType</td>
+                                    <td>₹@account.Balance.ToString("N2")</td>
+                                    <td>
+                                        <span class="badge rounded-pill @(account.Status == "Active" ? "bg-success" : "bg-secondary")">
+                                            @account.Status
+                                        </span>
+                                    </td>
+                                    <td>@account.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                    <td class="text-end">
+                                        <a asp-action="Update" asp-route-accountId="@account.AccountId" class="btn btn-sm btn-outline-warning">
+                                            Update Status
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (!Model.Any())
+                {
+                    <div class="alert alert-info mt-3" role="alert">
+                        No accounts found for this member.
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    Please select a member to view their account details.
+                </div>
+            }
+        </div>
+    </div>
+</div>

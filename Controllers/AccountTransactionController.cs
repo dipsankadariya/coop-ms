@@ -1,93 +1,203 @@
 using System.Threading.Tasks;
 using bms.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using bms.ViewModels; 
-using bms.Mappers; // Needed for AccountTransactionVmMapper
+using bms.Mappers;
+using Microsoft.AspNetCore.Authorization;
 
-public class AccountTransactionController : Controller
+namespace bms.Controllers
 {
-    private readonly IAccountTransactionService _accountTransactionService;
-    private readonly IMemberAccountService _memberAccountService;
-
-    public AccountTransactionController(IAccountTransactionService accountTransactionService, IMemberAccountService memberAccountService)
+    [Authorize(Roles = "Admin,Staff")]
+    public class AccountTransactionController : Controller
     {
-        _accountTransactionService = accountTransactionService;
-        _memberAccountService = memberAccountService;
-    }
+        private readonly IAccountTransactionService _accountTransactionService;
+        private readonly IMemberAccountService _memberAccountService;
+        private readonly IMemberService _memberService;
 
-    //get-add transaction
-    public async Task<IActionResult> AddTransaction(int accountId)
-    {
-        var account = await _memberAccountService.GetAccountByIdAsync(accountId);
-        if (account == null)
+        public AccountTransactionController(
+            IAccountTransactionService accountTransactionService, 
+            IMemberAccountService memberAccountService,
+            IMemberService memberService)
         {
-            return NotFound("Account not found");
+            _accountTransactionService = accountTransactionService;
+            _memberAccountService = memberAccountService;
+            _memberService = memberService;
         }
 
-        var vm = new AccountTransactionVm
+        // GET: AddTransaction - with optional accountId and transactionType
+        public async Task<IActionResult> AddTransaction(int? accountId, string? transactionType)
         {
-            AccountId = accountId,
-            Amount = 0,
-            MemberName = account.MemberName
-        };
-
-        return View(vm);
-    }
-
-  //post-add transaction
-    [HttpPost]
-    public async Task<IActionResult> AddTransaction(AccountTransactionVm accountTransactionVm)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View(accountTransactionVm);
-        }
-
-        try
-        {
-            var accountTransactionDto = AccountTransactionVmMapper.MapVmToDto(accountTransactionVm);
-            await _accountTransactionService.AddTransactionAsync(accountTransactionDto);
-           
-            TempData["SuccessMessage"] = "Transaction added successfully!";
-
-            return RedirectToAction("ViewStatement", "AccountTransaction", new { accountId = accountTransactionVm.AccountId });
-        }
-        catch (Exception ex)
+            // Get all active members for dropdown
+            var members = await _memberService.GetActiveMembersAsync();
+            var memberList = members.Select(m => new SelectListItem
             {
-    // Log the inner exception - that's where the real error is
-    var innerMessage = ex.InnerException?.Message ?? ex.Message;
-    Console.WriteLine($"ERROR: {innerMessage}");
-    Console.WriteLine($"FULL EXCEPTION: {ex}");
-    
-    // Repopulate MemberName before returning view on error
-    var account = await _memberAccountService.GetAccountByIdAsync(accountTransactionVm.AccountId);
-    if (account != null)
-    {
-        accountTransactionVm.MemberName = account.MemberName;
-    }
-    
-    TempData["ErrorMessage"] = innerMessage; // Show the real error
-    return View(accountTransactionVm);
-}
+                Value = m.MemberId.ToString(),
+                Text = m.FullName
+            }).ToList();
 
-    }
+            var vm = new AccountTransactionVm
+            {
+                MemberList = memberList,
+                AccountList = new List<SelectListItem>(),
+                TransactionType = transactionType ?? ""
+            };
 
-    //get view statement
-    public async Task<IActionResult> ViewStatement(int accountId)
-    {
-        var account = await _memberAccountService.GetAccountByIdAsync(accountId);
-        if (account == null)
-        {
-            return NotFound("Account not found");
+            // If accountId is provided, pre-select the account
+            if (accountId.HasValue && accountId.Value > 0)
+            {
+                var account = await _memberAccountService.GetAccountByIdAsync(accountId.Value);
+                if (account != null)
+                {
+                    vm.AccountId = accountId.Value;
+                    vm.MemberId = account.MemberId;
+                    vm.MemberName = account.MemberName;
+
+                    // Load accounts for this member
+                    var accounts = await _memberAccountService.GetAllAccountsByMemberIdAsync(account.MemberId);
+                    vm.AccountList = accounts
+                        .Where(a => a.Status?.ToLower() == "active")
+                        .Select(a => new SelectListItem
+                        {
+                            Value = a.AccountId.ToString(),
+                            Text = $"{a.AccountType} - ₹{a.Balance:N2}",
+                            Selected = a.AccountId == accountId.Value
+                        }).ToList();
+
+                    // Update member selection
+                    vm.MemberList = memberList.Select(m => new SelectListItem
+                    {
+                        Value = m.Value,
+                        Text = m.Text,
+                        Selected = m.Value == account.MemberId.ToString()
+                    }).ToList();
+                }
+            }
+
+            return View(vm);
         }
 
-        // Logic to get transactions and pass to view can
-        var transactions= await _accountTransactionService.GetAllTransactionsByAccountIdAsync(accountId);
-        var transactionVms= transactions.Select(transaction=> AccountTransactionVmMapper.MapDtoToVm(transaction)).ToList();
-        ViewBag.MemberName= account.MemberName;
-        return View(transactionVms);
-        
+        // AJAX: Get accounts by member
+        [HttpGet]
+        public async Task<IActionResult> GetAccountsByMember(int memberId)
+        {
+            var accounts = await _memberAccountService.GetAllAccountsByMemberIdAsync(memberId);
+            var activeAccounts = accounts
+                .Where(a => a.Status?.ToLower() == "active")
+                .Select(a => new { 
+                    value = a.AccountId, 
+                    text = $"{a.AccountType} - ₹{a.Balance:N2}" 
+                });
+            
+            return Json(activeAccounts);
+        }
 
-        
+        // POST: AddTransaction
+        [HttpPost]
+        public async Task<IActionResult> AddTransaction(AccountTransactionVm accountTransactionVm)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Reload dropdowns
+                await ReloadDropdowns(accountTransactionVm);
+                return View(accountTransactionVm);
+            }
+
+            try
+            {
+                var accountTransactionDto = AccountTransactionVmMapper.MapVmToDto(accountTransactionVm);
+                await _accountTransactionService.AddTransactionAsync(accountTransactionDto);
+                
+                TempData["SuccessMessage"] = "Transaction added successfully!";
+                return RedirectToAction("ViewStatement", new { accountId = accountTransactionVm.AccountId });
+            }
+            catch (Exception ex)
+            {
+                var innerMessage = ex.InnerException?.Message ?? ex.Message;
+                Console.WriteLine($"ERROR: {innerMessage}");
+                
+                await ReloadDropdowns(accountTransactionVm);
+                TempData["ErrorMessage"] = innerMessage;
+                return View(accountTransactionVm);
+            }
+        }
+
+        private async Task ReloadDropdowns(AccountTransactionVm vm)
+        {
+            var members = await _memberService.GetActiveMembersAsync();
+            vm.MemberList = members.Select(m => new SelectListItem
+            {
+                Value = m.MemberId.ToString(),
+                Text = m.FullName,
+                Selected = m.MemberId == vm.MemberId
+            }).ToList();
+
+            if (vm.MemberId > 0)
+            {
+                var accounts = await _memberAccountService.GetAllAccountsByMemberIdAsync(vm.MemberId);
+                vm.AccountList = accounts
+                    .Where(a => a.Status?.ToLower() == "active")
+                    .Select(a => new SelectListItem
+                    {
+                        Value = a.AccountId.ToString(),
+                        Text = $"{a.AccountType} - ₹{a.Balance:N2}",
+                        Selected = a.AccountId == vm.AccountId
+                    }).ToList();
+            }
+            else
+            {
+                vm.AccountList = new List<SelectListItem>();
+            }
+        }
+
+        // GET: SelectStatement - Select member and account to view statement
+        public async Task<IActionResult> SelectStatement()
+        {
+            var members = await _memberService.GetActiveMembersAsync();
+            var memberList = members.Select(m => new SelectListItem
+            {
+                Value = m.MemberId.ToString(),
+                Text = m.FullName
+            }).ToList();
+
+            var vm = new AccountTransactionVm
+            {
+                MemberList = memberList,
+                AccountList = new List<SelectListItem>()
+            };
+
+            return View(vm);
+        }
+
+        // POST: SelectStatement - Redirect to ViewStatement
+        [HttpPost]
+        public IActionResult SelectStatement(AccountTransactionVm vm)
+        {
+            if (vm.AccountId <= 0)
+            {
+                TempData["ErrorMessage"] = "Please select an account.";
+                return RedirectToAction("SelectStatement");
+            }
+
+            return RedirectToAction("ViewStatement", new { accountId = vm.AccountId });
+        }
+
+        // GET: ViewStatement
+        public async Task<IActionResult> ViewStatement(int accountId)
+        {
+            var account = await _memberAccountService.GetAccountByIdAsync(accountId);
+            if (account == null)
+            {
+                return NotFound("Account not found");
+            }
+
+            var transactions = await _accountTransactionService.GetAllTransactionsByAccountIdAsync(accountId);
+            var transactionVms = transactions.Select(transaction => AccountTransactionVmMapper.MapDtoToVm(transaction)).ToList();
+            ViewBag.MemberName = account.MemberName;
+            ViewBag.AccountId = accountId;
+            ViewBag.AccountType = account.AccountType;
+            ViewBag.Balance = account.Balance;
+            return View(transactionVms);
+        }
     }
 }

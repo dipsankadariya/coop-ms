@@ -21,5 +21,18 @@ namespace bms.ViewModels
         public int TotalAccounts { get; set; }
         public int ActiveAccounts { get; set; }
         public int InactiveAccounts { get; set; }
+
+        // ----- Transaction Stats (for chart) -----
+        public int TotalTransactions { get; set; }
+        public int DepositCount { get; set; }
+        public int WithdrawalCount { get; set; }
+        public decimal TotalDeposits { get; set; }
+        public decimal TotalWithdrawals { get; set; }
+
+        // ----- Account Type Distribution -----
+        public int SavingsAccounts { get; set; }
+        public int CurrentAccounts { get; set; }
+        public int FixedDepositAccounts { get; set; }
+        public int LoanAccounts { get; set; }
     }
 }

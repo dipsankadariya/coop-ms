@@ -1,0 +1,51 @@
+@model bms.ViewModels.MemberShare.MemberShareVm
+
+@{
+    ViewData["Title"] = "Get Member Share Details";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-light text-white">Member Share Details</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Back to List</a>
+    </div>
+    
+    @if (Model.MemberShares.Any())
+    {
+        <div class="mb-4">
+            <span class="text-muted">Total Shares:</span> <strong class="fs-5">Rs. @Model.MemberShares.Sum(s => s.Amount).ToString("N2")</strong>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-borderless table-hover align-middle">
+                <thead class="text-muted">
+                    <tr>
+                        <th>Share ID</th>
+                        <th>Amount</th>
+                        <th>Share Type</th>
+                        <th>Contribution Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var share in Model.MemberShares.OrderByDescending(s => s.ContributionDate))
+                    {
+                        <tr>
+                            <td>@share.ShareId</td>
+                            <td>Rs. @share.Amount.ToString("N2")</td>
+                            <td>
+                                <span class="badge rounded-pill bg-primary">@share.ShareType</span>
+                            </td>
+                            <td>@share.ContributionDate.ToString("MMM dd, yyyy hh:mm tt")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            No share contributions found for this member.
+        </div>
+    }
+</div>

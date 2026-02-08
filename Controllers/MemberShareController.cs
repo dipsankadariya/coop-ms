@@ -24,15 +24,17 @@ namespace bms.Controllers
             _memberService = memberService;
             _memberShareService = memberShareService;
         }
-           //list all the members
+
+        //list all the members
         [HttpGet]
-        public async Task<IActionResult> Index(){
-            TempData.Clear(); // Clear old messages from other controllers
+        public async Task<IActionResult> Index()
+        {
+            TempData.Clear();
             try
             {
-             var memberDto= await _memberService.GetAllMembersAsync();
-           var memberVm = memberDto.Select(MemberVmMapper.MapDtoToViewModel).ToList();
-            return View(memberVm);
+                var memberDto = await _memberService.GetActiveMembersAsync();
+                var memberVm = memberDto.Select(MemberVmMapper.MapDtoToViewModel).ToList();
+                return View(memberVm);
             }
             catch(Exception ex)
             {
@@ -43,71 +45,135 @@ namespace bms.Controllers
 
         //get: add share form
         [HttpGet]
-        public async Task<IActionResult> AddShare(int  memberId){
-          try{
-            var memberDto= await _memberService.GetMemberByIdAsync(memberId);
-            if(memberDto==null){
-                return NotFound();
-            }
-          var memberVm= MemberVmMapper.MapDtoToViewModel(memberDto);
-          return View(memberVm);
-          }
-          catch(Exception ex){
-            TempData["ErrorMessage"]= "An error occurred while loading  form: " + ex.Message;
-            return RedirectToAction("Index", "MemberShare");
-        }
-        }
-    
+        public async Task<IActionResult> AddShare(string shareType="Ordinary")
+        {
+            try
+            {
+                var activeMembersdto = await _memberService.GetActiveMembersAsync();
+                var activeMembers = activeMembersdto.Select(MemberVmMapper.MapDtoToViewModel).ToList();
 
-        //add share post
+                var model = new MemberShareVm
+                {
+                    MemberList = activeMembers,
+                    ShareType = shareType
+                };
+                return View(model);
+            }
+            catch(Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while loading the add share form: " + ex.Message;
+                return RedirectToAction("Index", "MemberShare");
+            }
+        }
+
+        //add share post  👉 MODELSTATE REMOVED HERE
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddShare(MemberShareVm memberShareVm)
         {
-           try{
-        if (ModelState.IsValid)
-        {
-          var memberShareDto= MemberShareVmMapper.MapVmToDto(memberShareVm);
-           await _memberShareService.AddMemberShareAsync(memberShareDto);
-            TempData["SuccessMessage"] = "Share added successfully.";
-            return RedirectToAction("Index");
-        }
-            // Validation failed
-            TempData["ErrorMessage"] = "Invalid data provided.";
-            return RedirectToAction("Index");
-           }
-           catch(Exception ex){
-            TempData["ErrorMessage"]= "An error occurred while adding share: " + ex.Message;
-            return RedirectToAction("Index");
-           }
+            try
+            {
+                var memberShareDto = MemberShareVmMapper.MapVmToDto(memberShareVm);
+                await _memberShareService.AddMemberShareAsync(memberShareDto);
+
+                TempData["SuccessMessage"] = "Share added successfully.";
+                return RedirectToAction("Index");
+            }
+            catch(Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while adding share: " + ex.Message;
+                return RedirectToAction("Index");
+            }
         }
 
-        //get total share for  memeber
+        //get total share for member
         [HttpGet]
         public async Task<IActionResult> GetTotalShareForMember(int memberId)
         {
-          try{
-            var totalShare= await _memberShareService.GetTotalShareByMemberIdAsync(memberId);
-            return View(totalShare);
-          }
-          catch(Exception ex){
-            TempData["ErrorMessage"]= "An error occurred while fetching total shares: " + ex.Message;
-            return RedirectToAction("Index", "MemberShare");
-          }
+            try
+            {
+                var totalShare = await _memberShareService.GetTotalShareByMemberIdAsync(memberId);
+                return View(totalShare);
+            }
+            catch(Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while fetching total shares: " + ex.Message;
+                return RedirectToAction("Index", "MemberShare");
+            }
         }
 
-        //view all shares details for member
+        //View Member share details form page - GET
         [HttpGet]
-        public async Task<IActionResult> ViewMemberSharesDetails(int memberId)
+        public async Task<IActionResult> ViewMemberSharesDetails()
         {
-          try{
-            var memberShares= await _memberShareService.GetAllMemberSharesByMemberIdAsync(memberId);
-            return View(memberShares);
-          }
-          catch(Exception ex){
-            TempData["ErrorMessage"]= "An error occurred while fetching share details: " + ex.Message;
-            return RedirectToAction("Index", "MemberShare");
-          }
+            try
+            {
+                var activeMembersdto = await _memberService.GetActiveMembersAsync();
+                var activeMembers = activeMembersdto.Select(MemberVmMapper.MapDtoToViewModel).ToList();
+
+                var model = new MemberShareVm
+                {
+                    MemberList = activeMembers
+                };
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while loading the form: " + ex.Message;
+                return RedirectToAction("Index", "MemberShare");
+            }
+        }
+
+        //View Member share details form page - POST 👉 MODELSTATE REMOVED HERE
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ViewMemberSharesDetails(MemberShareVm memberShareVm)
+        {
+            try
+            {
+                if (memberShareVm.MemberId > 0)
+                {
+                    return RedirectToAction(
+                        "GetMemberSharesDetailsbyId",
+                        new { memberId = memberShareVm.MemberId }
+                    );
+                }
+
+                TempData["ErrorMessage"] = "Invalid data provided.";
+                return RedirectToAction("Index", "MemberShare");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while processing your request: " + ex.Message;
+                return RedirectToAction("Index", "MemberShare");
+            }
+        }
+
+        //Get member share details by Id
+        [HttpGet]
+        public async Task<IActionResult> GetMemberSharesDetails(int memberId)
+        {
+            try
+            {
+                var memberShares =
+                    await _memberShareService.GetAllMemberSharesByMemberIdAsync(memberId);
+
+                var vm = new MemberShareVm
+                {
+                    MemberShares = memberShares
+                        .Select(MemberShareVmMapper.MapDtoToVm)
+                        .ToList(),
+                    MemberId = memberId
+                };
+                return View(vm);
+            }
+            catch(Exception ex)
+            {
+                TempData["ErrorMessage"] =
+                    "An error occurred while fetching share details: " + ex.Message;
+
+                return RedirectToAction("Index", "MemberShare");
+            }
         }
     }
 }

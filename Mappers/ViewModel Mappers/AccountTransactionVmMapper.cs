@@ -15,6 +15,7 @@ public static class AccountTransactionVmMapper
         TransactionDate=accountTransactionVm.TransactionDate,
         BalanceAfter=accountTransactionVm.BalanceAfter,
         Notes=accountTransactionVm.Notes
+        
     };
     public static AccountTransactionVm MapDtoToVm(AccountTransactionDto accountTransactionDto)=>new AccountTransactionVm
     {

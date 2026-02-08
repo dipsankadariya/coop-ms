@@ -1,0 +1,99 @@
+@model bms.ViewModels.AccountTransactionVm
+
+@{
+    ViewData["Title"] = "View Statement";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>View Account Statement</h5>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form asp-action="SelectStatement" method="post">
+                        <div class="mb-3">
+                            <label asp-for="MemberId" class="form-label fw-bold">Select Member</label>
+                            <select asp-for="MemberId" asp-items="Model.MemberList" class="form-select" id="memberSelect">
+                                <option value="">-- Select Member --</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="AccountId" class="form-label fw-bold">Select Account</label>
+                            <select asp-for="AccountId" class="form-select" id="accountSelect" disabled>
+                                <option value="">-- Select Member First --</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" id="viewBtn" disabled>
+                                <i class="bi bi-eye me-2"></i>View Statement
+                            </button>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('memberSelect').addEventListener('change', function () {
+            const memberId = this.value;
+            const accountSelect = document.getElementById('accountSelect');
+            const viewBtn = document.getElementById('viewBtn');
+
+            if (!memberId) {
+                accountSelect.innerHTML = '<option value="">-- Select Member First --</option>';
+                accountSelect.disabled = true;
+                viewBtn.disabled = true;
+                return;
+            }
+
+            // Fetch accounts for selected member
+            fetch(`/AccountTransaction/GetAccountsByMember?memberId=${memberId}`)
+                .then(response => response.json())
+                .then(accounts => {
+                    accountSelect.innerHTML = '<option value="">-- Select Account --</option>';
+                    if (accounts.length === 0) {
+                        accountSelect.innerHTML = '<option value="">-- No Active Accounts --</option>';
+                        accountSelect.disabled = true;
+                        viewBtn.disabled = true;
+                    } else {
+                        accounts.forEach(acc => {
+                            const option = document.createElement('option');
+                            option.value = acc.value;
+                            option.textContent = acc.text;
+                            accountSelect.appendChild(option);
+                        });
+                        accountSelect.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching accounts:', error);
+                    accountSelect.innerHTML = '<option value="">-- Error Loading Accounts --</option>';
+                    accountSelect.disabled = true;
+                    viewBtn.disabled = true;
+                });
+        });
+
+        document.getElementById('accountSelect').addEventListener('change', function () {
+            const viewBtn = document.getElementById('viewBtn');
+            viewBtn.disabled = !this.value;
+        });
+    </script>
+}

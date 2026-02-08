@@ -64,17 +64,49 @@ h1, h2, h3, h4, h5, h6, p, span, div, td, th, label, a {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
+/* IMPROVED DROPDOWN STYLING - APPLIES TO ALL DROPDOWNS */
 .dropdown-menu {
   background-color: #1e1f26;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0 !important;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Submenu dropdowns - same styling */
+.dropdown-submenu > .dropdown-menu {
+  background-color: #1e1f26;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0 !important;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .dropdown-item {
   color: white !important;
+  padding: 0.4rem 1rem !important;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
 }
 
 .dropdown-item:hover {
   background-color: rgba(255, 255, 255, 0.1);
+  padding-left: 1.2rem !important;
+}
+
+.dropdown-divider {
+  margin: 0 !important;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-item-text {
+  color: rgba(255, 255, 255, 0.7) !important;
+  padding: 0.4rem 1rem !important;
 }
 
 /* Form controls */

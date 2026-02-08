@@ -8,18 +8,19 @@ namespace bms.Mappers.ViewModelMappers
         //convert dto to viewmodel
         public static MemberShareVm MapDtoToVm(MemberShareDto memberShareDto) => new MemberShareVm
         {
-            MemberId=memberShareDto.MemberId,
-            Amount=memberShareDto.Amount,
-            ShareType=memberShareDto.ShareType,
+            ShareId = memberShareDto.ShareId,
+            MemberId = memberShareDto.MemberId,
+            Amount = memberShareDto.Amount,
+            ShareType = memberShareDto.ShareType,
+            ContributionDate = memberShareDto.ContributionDate
         };
 
         //convert viewmodel to dto
-        public static MemberShareDto MapVmToDto(MemberShareVm memberShareVm)=> new MemberShareDto
+        public static MemberShareDto MapVmToDto(MemberShareVm memberShareVm) => new MemberShareDto
         {
-            MemberId=memberShareVm.MemberId,
-            Amount=memberShareVm.Amount,
-            ShareType=memberShareVm.ShareType!,
-
+            MemberId = memberShareVm.MemberId,
+            Amount = memberShareVm.Amount,
+            ShareType = memberShareVm.ShareType!,
         };
     }
 }

@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Create Account";
-    var member = ViewBag.Member as bms.ViewModels.Member.MemberVm;
 }
 
 <div class="container py-5">
@@ -21,7 +20,14 @@
             <form asp-action="Create" method="post" class="bg-dark p-4 rounded">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                <input type="hidden" asp-for="MemberId" />
+                <!-- Member Selection -->
+                <div class="mb-3">
+                    <label asp-for="MemberId" class="form-label text-white">Select Member</label>
+                    <select asp-for="MemberId" asp-items="Model.MemberList" class="form-select">
+                        <option value="">-- Select Member --</option>
+                    </select>
+                    <span asp-validation-for="MemberId" class="text-danger small"></span>
+                </div>
 
                 <div class="mb-3">
                     <label asp-for="AccountType" class="form-label text-white">Account Type</label>

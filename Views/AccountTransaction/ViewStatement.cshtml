@@ -8,12 +8,13 @@
     </div>
 }
 
-<p>Transaction Details for  @ViewBag.MemberName</p>
+<p>Transaction Details </p>
 
 <div>
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Date</th>
                 <th>Type</th>
                 <th>Amount</th>
@@ -25,13 +26,16 @@
             @foreach (var transaction in Model)
             {
                 <tr>
+                    <td>@transaction.TransactionId</td>
                     <td>@transaction.TransactionDate.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>@transaction.TransactionType</td>
                     <td>@transaction.Amount.ToString("C")</td>
                     <td>@transaction.Notes</td>
                     <td>@transaction.BalanceAfter.ToString("C")</td>
                 </tr>
+            
             }
         </tbody>
     </table>
+     <button type="submit" class="btn btn-outline-primary me-2" onclick="history.back()">Go Back</button>
 </div>
