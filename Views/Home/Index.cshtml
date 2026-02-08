@@ -28,9 +28,16 @@
                     </div>
                 </div>
                 <div class="card-footer bg-transparent border-top border-secondary">
-                    <a asp-controller="Member" asp-action="Index" class="text-primary text-decoration-none small">
-                        View Members →
-                    </a>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                    {
+                        <a asp-controller="Member" asp-action="Index" class="text-primary text-decoration-none small">
+                            View Members →
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted small">Members</span>
+                    }
                 </div>
             </div>
         </div>
