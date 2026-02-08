@@ -25,10 +25,8 @@ namespace bms.Controllers
             _memberService = memberService;
         }
 
-        // GET: AddTransaction - with optional accountId and transactionType
         public async Task<IActionResult> AddTransaction(int? accountId, string? transactionType)
         {
-            // Get all active members for dropdown
             var members = await _memberService.GetActiveMembersAsync();
             var memberList = members.Select(m => new SelectListItem
             {
@@ -43,7 +41,6 @@ namespace bms.Controllers
                 TransactionType = transactionType ?? ""
             };
 
-            // If accountId is provided, pre-select the account
             if (accountId.HasValue && accountId.Value > 0)
             {
                 var account = await _memberAccountService.GetAccountByIdAsync(accountId.Value);
@@ -53,7 +50,6 @@ namespace bms.Controllers
                     vm.MemberId = account.MemberId;
                     vm.MemberName = account.MemberName;
 
-                    // Load accounts for this member
                     var accounts = await _memberAccountService.GetAllAccountsByMemberIdAsync(account.MemberId);
                     vm.AccountList = accounts
                         .Where(a => a.Status?.ToLower() == "active")
@@ -64,7 +60,6 @@ namespace bms.Controllers
                             Selected = a.AccountId == accountId.Value
                         }).ToList();
 
-                    // Update member selection
                     vm.MemberList = memberList.Select(m => new SelectListItem
                     {
                         Value = m.Value,
@@ -77,7 +72,6 @@ namespace bms.Controllers
             return View(vm);
         }
 
-        // AJAX: Get accounts by member
         [HttpGet]
         public async Task<IActionResult> GetAccountsByMember(int memberId)
         {
@@ -92,13 +86,11 @@ namespace bms.Controllers
             return Json(activeAccounts);
         }
 
-        // POST: AddTransaction
         [HttpPost]
         public async Task<IActionResult> AddTransaction(AccountTransactionVm accountTransactionVm)
         {
             if (!ModelState.IsValid)
             {
-                // Reload dropdowns
                 await ReloadDropdowns(accountTransactionVm);
                 return View(accountTransactionVm);
             }
@@ -150,7 +142,6 @@ namespace bms.Controllers
             }
         }
 
-        // GET: SelectStatement - Select member and account to view statement
         public async Task<IActionResult> SelectStatement()
         {
             var members = await _memberService.GetActiveMembersAsync();
@@ -169,7 +160,6 @@ namespace bms.Controllers
             return View(vm);
         }
 
-        // POST: SelectStatement - Redirect to ViewStatement
         [HttpPost]
         public IActionResult SelectStatement(AccountTransactionVm vm)
         {
@@ -182,7 +172,6 @@ namespace bms.Controllers
             return RedirectToAction("ViewStatement", new { accountId = vm.AccountId });
         }
 
-        // GET: ViewStatement
         public async Task<IActionResult> ViewStatement(int accountId)
         {
             var account = await _memberAccountService.GetAccountByIdAsync(accountId);
